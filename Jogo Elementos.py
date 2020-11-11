@@ -8,7 +8,7 @@ pygame.init()
 WIDTH = 1377
 HEIGHT = 720
 window = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Lord Element')
+pygame.display.set_caption("Lord's Element")
 
 game = True
 
