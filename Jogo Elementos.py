@@ -9,7 +9,7 @@ WIDTH = 956
 HEIGHT = 510
 AANG_WIDTH = 135
 AANG_HEIGHT = 105
-GRAVIDADE = 1
+GRAVIDADE = 3
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Lord's Element")
@@ -35,15 +35,15 @@ class Aang(pygame.sprite.Sprite):
     def update(self):
         # Atualização da posição do jogador
         self.rect.x += self.speedx
-        self.rect.bottom += self.vy
         self.rect.bottom += GRAVIDADE
+        self.rect.bottom += self.vy
         # Mantem dentro da tela
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
         if self.rect.left < 0:
             self.rect.left = 0
-        if self.rect.bottom > 510:
-            self.rect.bottom = 510
+        if self.rect.bottom > HEIGHT-1:
+            self.rect.bottom = HEIGHT-1
             self.vy = 0
 
 # Criando um grupo
@@ -66,6 +66,9 @@ while game:
                 player.speedx -= 4
             if event.key == pygame.K_RIGHT:
                 player.speedx += 4
+            if event.key == pygame.K_UP:
+                for sprite in all_sprites:
+                    sprite.vy -= 4
         # Verifica se soltou alguma tecla.
         if event.type == pygame.KEYUP:
             # Dependendo da tecla, altera a velocidade.
@@ -75,7 +78,8 @@ while game:
                 player.speedx -= 4
             if event.key == pygame.K_UP:
                 for sprite in all_sprites:
-                    sprite.vy -= 1
+                    sprite.vy += 4
+            
 
     # ----- Atualiza estado do jogo
     # Atualizando a posição do player
