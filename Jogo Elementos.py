@@ -9,6 +9,7 @@ WIDTH = 956
 HEIGHT = 510
 AANG_WIDTH = 135
 AANG_HEIGHT = 105
+GRAVIDADE = 1
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Lord's Element")
@@ -29,16 +30,21 @@ class Aang(pygame.sprite.Sprite):
         self.rect.centerx = WIDTH / 2
         self.rect.bottom = HEIGHT - 1
         self.speedx = 0
+        self.vy = 0
 
     def update(self):
         # Atualização da posição do jogador
         self.rect.x += self.speedx
-
+        self.rect.bottom += self.vy
+        self.rect.bottom += GRAVIDADE
         # Mantem dentro da tela
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
         if self.rect.left < 0:
             self.rect.left = 0
+        if self.rect.bottom > 510:
+            self.rect.bottom = 510
+            self.vy = 0
 
 # Criando um grupo
 all_sprites = pygame.sprite.Group()
@@ -67,6 +73,9 @@ while game:
                 player.speedx += 4
             if event.key == pygame.K_RIGHT:
                 player.speedx -= 4
+            if event.key == pygame.K_UP:
+                for sprite in all_sprites:
+                    sprite.vy -= 1
 
     # ----- Atualiza estado do jogo
     # Atualizando a posição do player
