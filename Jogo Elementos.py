@@ -9,13 +9,13 @@ COMPRIMENTO = 956
 ALTURA = 510
 AANG_COMPRIMENTO = 135
 AANG_ALTURA = 105
-GROUND_COMPRIMENTO = 300
+GROUND_COMPRIMENTO = 1100
 GROUND_ALTURA = 100
 GRAVIDADE = 3
 
 window = pygame.display.set_mode((COMPRIMENTO, ALTURA))
 pygame.display.set_caption("Lord's Element")
-image = pygame.image.load('background air.png').convert()
+image = pygame.image.load('background air.jpg').convert()
 image = pygame.transform.scale(image, (956, 510))
 aang = pygame.image.load('player1.png').convert_alpha()
 aang = pygame.transform.scale(aang, (AANG_COMPRIMENTO, AANG_ALTURA))
@@ -23,6 +23,15 @@ ground = pygame.image.load('ground.png').convert_alpha()
 ground = pygame.transform.scale(ground, (GROUND_COMPRIMENTO, GROUND_ALTURA))
 
 # Definindo os novos tipos
+class Platform(pygame.sprite.Sprite):
+    def __init__(self, xloc, yloc, img):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.y = yloc
+        self.rect.centerx = xloc
+        #self.rect.x = xloc
+
 class Aang(pygame.sprite.Sprite):
     def __init__(self, img):
         # Construtor da classe mãe (Sprite).
@@ -35,7 +44,7 @@ class Aang(pygame.sprite.Sprite):
         self.speedx = 0
         self.vy = 0
 
-    def update(self):
+    def update(self, plataformas):
         # Atualização da posição do jogador
         self.rect.x += self.speedx
         self.rect.bottom += GRAVIDADE
@@ -48,15 +57,8 @@ class Aang(pygame.sprite.Sprite):
         if self.rect.bottom > ALTURA - 1:
             self.rect.bottom = ALTURA -1
             self.vy = 0
+        
 
-class Platform(pygame.sprite.Sprite):
-    def __init__(self, xloc, yloc, img):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = img
-        self.rect = self.image.get_rect()
-        self.rect.y = yloc
-        self.rect.x = xloc
-    
 # Criando um grupo
 all_sprites = pygame.sprite.Group()
 all_plataforms = pygame.sprite.Group()
@@ -66,9 +68,10 @@ player = Aang(aang)
 all_sprites.add(player)
 
 # Criando a plataforma
-plataforma_ground = Platform((COMPRIMENTO/2), (ALTURA - 50), ground)
+plataforma_ground = Platform(456, (ALTURA - 60), ground)
 all_plataforms.add(plataforma_ground)
 
+#Loop principal do jogo
 game = True
 
 while game:
@@ -99,8 +102,13 @@ while game:
             
 
     # ----- Atualiza estado do jogo
+    # Verifica se houve colisão entre personagem e plataforma
+    encontro = pygame.sprite.groupcollide(all_sprites, all_plataforms, False, False)
+    
+
+        
     # Atualizando a posição do player
-    all_sprites.update()
+    all_sprites.update(all_plataforms)
 
     window.fill((255, 255, 255))  # Preenche com a cor branca
     window.blit(image, (0, 0))
