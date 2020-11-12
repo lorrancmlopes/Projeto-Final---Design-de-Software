@@ -9,15 +9,18 @@ COMPRIMENTO = 956
 ALTURA = 510
 AANG_COMPRIMENTO = 135
 AANG_ALTURA = 105
+GROUND_COMPRIMENTO = 300
+GROUND_ALTURA = 100
 GRAVIDADE = 3
 
 window = pygame.display.set_mode((COMPRIMENTO, ALTURA))
 pygame.display.set_caption("Lord's Element")
-image = pygame.image.load('fundo1.png').convert()
+image = pygame.image.load('background air.png').convert()
 image = pygame.transform.scale(image, (956, 510))
 aang = pygame.image.load('player1.png').convert_alpha()
 aang = pygame.transform.scale(aang, (AANG_COMPRIMENTO, AANG_ALTURA))
 ground = pygame.image.load('ground.png').convert_alpha()
+ground = pygame.transform.scale(ground, (GROUND_COMPRIMENTO, GROUND_ALTURA))
 
 # Definindo os novos tipos
 class Aang(pygame.sprite.Sprite):
@@ -56,9 +59,15 @@ class Platform(pygame.sprite.Sprite):
     
 # Criando um grupo
 all_sprites = pygame.sprite.Group()
+all_plataforms = pygame.sprite.Group()
+
 # Criando o jogador
 player = Aang(aang)
 all_sprites.add(player)
+
+# Criando a plataforma
+plataforma_ground = Platform((COMPRIMENTO/2), (ALTURA - 50), ground)
+all_plataforms.add(plataforma_ground)
 
 game = True
 
@@ -98,6 +107,8 @@ while game:
 
     # Desenhando o jogador
     all_sprites.draw(window)
+    # Desenhando a plataforma
+    all_plataforms.draw(window)
 
     pygame.display.update()  # Mostra o novo frame para o jogador
 
