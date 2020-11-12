@@ -5,19 +5,19 @@ import time
 pygame.init()
 
 #gera tela
-WIDTH = 956
-HEIGHT = 510
-AANG_WIDTH = 135
-AANG_HEIGHT = 105
+COMPRIMENTO = 956
+ALTURA = 510
+AANG_COMPRIMENTO = 135
+AANG_ALTURA = 105
 GRAVIDADE = 3
 
-window = pygame.display.set_mode((WIDTH, HEIGHT))
+window = pygame.display.set_mode((COMPRIMENTO, ALTURA))
 pygame.display.set_caption("Lord's Element")
 image = pygame.image.load('fundo1.png').convert()
 image = pygame.transform.scale(image, (956, 510))
 aang = pygame.image.load('player1.png').convert_alpha()
-aang = pygame.transform.scale(aang, (AANG_WIDTH, AANG_HEIGHT))
-
+aang = pygame.transform.scale(aang, (AANG_COMPRIMENTO, AANG_ALTURA))
+ground = pygame.image.load('ground.png').convert_alpha()
 
 # Definindo os novos tipos
 class Aang(pygame.sprite.Sprite):
@@ -27,8 +27,8 @@ class Aang(pygame.sprite.Sprite):
 
         self.image = img
         self.rect = self.image.get_rect()
-        self.rect.centerx = WIDTH / 2
-        self.rect.bottom = HEIGHT - 1
+        self.rect.centerx = COMPRIMENTO / 2
+        self.rect.bottom = ALTURA - 1
         self.speedx = 0
         self.vy = 0
 
@@ -38,14 +38,22 @@ class Aang(pygame.sprite.Sprite):
         self.rect.bottom += GRAVIDADE
         self.rect.bottom += self.vy
         # Mantem dentro da tela
-        if self.rect.right > WIDTH:
-            self.rect.right = WIDTH
+        if self.rect.right > COMPRIMENTO:
+            self.rect.right = COMPRIMENTO
         if self.rect.left < 0:
             self.rect.left = 0
-        if self.rect.bottom > HEIGHT-1:
-            self.rect.bottom = HEIGHT-1
+        if self.rect.bottom > ALTURA - 1:
+            self.rect.bottom = ALTURA -1
             self.vy = 0
 
+class Platform(pygame.sprite.Sprite):
+    def __init__(self, xloc, yloc, img):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = img
+        self.rect = self.image.get_rect()
+        self.rect.y = yloc
+        self.rect.x = xloc
+    
 # Criando um grupo
 all_sprites = pygame.sprite.Group()
 # Criando o jogador
@@ -78,7 +86,7 @@ while game:
                 player.speedx -= 4
             if event.key == pygame.K_UP:
                 for sprite in all_sprites:
-                    sprite.vy += 4
+                    sprite.vy += 4 
             
 
     # ----- Atualiza estado do jogo
