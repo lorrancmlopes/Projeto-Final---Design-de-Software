@@ -22,6 +22,7 @@ pygame.display.set_caption("Lord's Element")
 
 PLAYER_IMG = 'player_img'
 BACKGROUND = 'background_air'
+ENEMY = 'enemy_img'
 
 JUMP_SIZE = TILE_SIZE
 SPEED_X = 5
@@ -70,6 +71,9 @@ class Tile(pygame.sprite.Sprite):
         self.rect.y = TILE_SIZE * row
 
 # Classe Jogador que representa o herói
+
+inimigo_list = pygame.sprite.Group()
+
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, player_img, row, column, platforms, blocks):
@@ -105,6 +109,8 @@ class Player(pygame.sprite.Sprite):
         # Essa variável sempre conterá a maior altura alcançada pelo jogador
         # antes de começar a cair
         self.highest_y = self.rect.bottom
+        #vida do jogador
+        self.health = 10
 
     # Metodo que atualiza a posição do personagem
     def update(self):
@@ -181,6 +187,10 @@ class Player(pygame.sprite.Sprite):
             # Estava indo para a esquerda
             elif self.speedx < 0:
                 self.rect.left = collision.rect.right
+        
+        hit_list = pygame.sprite.spritecollide(self, inimigo_list, False)
+        for i in hit_list:
+            self.health -= 1
 
     # Método que faz o personagem pular
     def jump(self):
@@ -189,8 +199,33 @@ class Player(pygame.sprite.Sprite):
             self.speedy -= JUMP_SIZE
             self.state = JUMPING
 
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self,x,y,enemy_img):
+        pygame.sprite.Sprite.__init__(self)
+        enemy_img = pygame.transform.scale(enemy_img, (PLAYER_LARGURA, PLAYER_ALTURA))
+        self.image = enemy_img
+        self.image.convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.counter = 0
+
+    def move(self):
+        distance = 40
+        speed = 2
+        if self.counter >= 0 and self.counter <= distance:
+            self.rect.x += speed
+        elif self.counter >= distance and self.counter <= distance*2:
+            self.rect.x -= speed
+        else:
+            self.counter = 0
+
+        self.counter += 1
+
+
 def load_assets(img_dir):
     assets = {}
+    assets[ENEMY] =  pygame.image.load(path.join(img_dir, 'enemy.png')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
     assets[BLOCK] = pygame.image.load(path.join(img_dir, 'tile-block.png')).convert()
     assets[PLATF] = pygame.image.load(path.join(img_dir, 'tile-wood.png')).convert()
@@ -217,6 +252,8 @@ def game_screen(window):
 
     # Cria Sprite do jogador
     player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks)
+    inimigo = Enemy(300, 420, assets[ENEMY])
+    inimigo_list = pygame.sprite.Group()
 
     # Cria tiles de acordo com o mapa
     for row in range(len(MAP)):
@@ -232,6 +269,7 @@ def game_screen(window):
 
     # Adiciona o jogador no grupo de sprites por último para ser desenhado por cima das plataformas
     all_sprites.add(player)
+    inimigo_list.add(inimigo)
 
     PLAYING = 0
     DONE = 1
@@ -244,11 +282,9 @@ def game_screen(window):
 
         # Processa os eventos (mouse, teclado, botão, etc).
         for event in pygame.event.get():
-
             # Verifica se foi fechado.
             if event.type == pygame.QUIT:
                 state = DONE
-
             # Verifica se apertou alguma tecla.
             if event.type == pygame.KEYDOWN:
                 # Dependendo da tecla, altera o estado do jogador.
@@ -267,6 +303,8 @@ def game_screen(window):
                 elif event.key == pygame.K_RIGHT:
                     player.speedx -= SPEED_X
 
+        for e in inimigo_list:
+                e.move()
         # Depois de processar os eventos.
         # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
         all_sprites.update()
@@ -275,6 +313,7 @@ def game_screen(window):
         window.fill((0, 0, 0))
 
         all_sprites.draw(window)
+        inimigo_list.draw(window)
 
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
