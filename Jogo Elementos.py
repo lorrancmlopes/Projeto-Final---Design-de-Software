@@ -110,7 +110,7 @@ class Player(pygame.sprite.Sprite):
         # antes de começar a cair
         self.highest_y = self.rect.bottom
         #vida do jogador
-        self.health = 10
+        self.health = 3
 
     # Metodo que atualiza a posição do personagem
     def update(self):
@@ -252,8 +252,13 @@ def game_screen(window):
 
     # Cria Sprite do jogador
     player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks)
-    inimigo = Enemy(300, 420, assets[ENEMY])
-    inimigo_list = pygame.sprite.Group()
+    inimigo = []
+    inimigo_posicoes_x = [300, 700, 500, 120, 80]
+    inimigo_posicoes_y = [420, 300, 100, 180, 800]
+    i = 0
+    while i < len(inimigo_posicoes_x):
+        inimigo.append(Enemy(inimigo_posicoes_x[i], inimigo_posicoes_y[i], assets[ENEMY]))
+        i += 1
 
     # Cria tiles de acordo com o mapa
     for row in range(len(MAP)):
@@ -269,8 +274,11 @@ def game_screen(window):
 
     # Adiciona o jogador no grupo de sprites por último para ser desenhado por cima das plataformas
     all_sprites.add(player)
-    inimigo_list.add(inimigo)
-
+    w = 0 
+    while w < len(inimigo):
+        inimigo_list.add(inimigo[w])
+        w += 1
+    
     PLAYING = 0
     DONE = 1
 
