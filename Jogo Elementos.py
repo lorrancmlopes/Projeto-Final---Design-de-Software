@@ -227,9 +227,10 @@ def load_assets(img_dir):
     assets = {}
     assets[ENEMY] =  pygame.image.load(path.join(img_dir, 'enemy.png')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
-    assets[BLOCK] = pygame.image.load(path.join(img_dir, 'tile-block.png')).convert()
+    assets[BLOCK] = pygame.image.load(path.join(img_dir, 'bloco.png')).convert_alpha()
     assets[PLATF] = pygame.image.load(path.join(img_dir, 'tile-wood.png')).convert()
-    assets[BACKGROUND] = pygame.image.load(path.join(img_dir, 'background_air.jpg')).convert()
+    bg = pygame.image.load(path.join(img_dir, 'background AR.jpg')).convert()
+    assets[BACKGROUND] = pygame.transform.scale(bg, (LARGURA, ALTURA))
     return assets
 
 def game_screen(window):
@@ -319,6 +320,7 @@ def game_screen(window):
 
         # A cada loop, redesenha o fundo e os sprites
         window.fill((0, 0, 0))
+        window.blit(assets[BACKGROUND], (0, 0))
 
         all_sprites.draw(window)
         inimigo_list.draw(window)
