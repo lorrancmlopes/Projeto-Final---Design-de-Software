@@ -111,13 +111,23 @@ class Player(pygame.sprite.Sprite):
         self.highest_y = self.rect.bottom
         #vida do jogador
         self.health = 3
+        #tempo
+        self.last_update = pygame.time.get_ticks()
+        self.frame_ticks = 1000
+        self.contato = False
 
     # Metodo que atualiza a posição do personagem
     def update(self):
-        # Vamos tratar os movimentos de maneira independente.
-        # Primeiro tentamos andar no eixo y e depois no x.
+        #verifica tempo do jogo
+        now = pygame.time.get_ticks()
+        # Verifica quantos ticks se passaram desde a ultima mudança de frame.
+        elapsed_ticks = now - self.last_update
 
-        # Tenta andar em y
+        # Se já está na hora de mudar de imagem...
+        if elapsed_ticks > self.frame_ticks:
+            # Marca o tick da nova imagem.
+            self.contato = False
+            self.last_update = now
         # Atualiza a velocidade aplicando a aceleração da gravidade
         self.speedy += GRAVIDADE
         # Atualiza o estado para caindo
@@ -188,9 +198,6 @@ class Player(pygame.sprite.Sprite):
             elif self.speedx < 0:
                 self.rect.left = collision.rect.right
         
-        hit_list = pygame.sprite.spritecollide(self, inimigo_list, False)
-        for i in hit_list:
-            self.health -= 1
 
     # Método que faz o personagem pular
     def jump(self):
@@ -254,8 +261,8 @@ def game_screen(window):
     # Cria Sprite do jogador
     player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks)
     inimigo = []
-    inimigo_posicoes_x = [300, 700, 500, 120, 80]
-    inimigo_posicoes_y = [420, 300, 100, 180, 800]
+    inimigo_posicoes_x = [300, 700, 500, 120, 800]
+    inimigo_posicoes_y = [420, 300, 100, 180, 0]
     i = 0
     while i < len(inimigo_posicoes_x):
         inimigo.append(Enemy(inimigo_posicoes_x[i], inimigo_posicoes_y[i], assets[ENEMY]))
@@ -273,7 +280,7 @@ def game_screen(window):
                 elif tile_type == PLATF:
                     platforms.add(tile)
 
-    # Adiciona o jogador no grupo de sprites por último para ser desenhado por cima das plataformas
+    # Adiciona o jogador e inimigo no grupo de sprites por último para ser desenhado por cima das plataformas
     all_sprites.add(player)
     w = 0 
     while w < len(inimigo):
@@ -314,6 +321,15 @@ def game_screen(window):
 
         for e in inimigo_list:
                 e.move()
+
+        encontro = pygame.sprite.spritecollide(player, inimigo_list, False)
+        if len(encontro) > 0 and player.contato == False:
+            player.contato = True
+            player.health -= 1
+            player.last_update = pygame.time.get_ticks()
+            print(player.health)
+        #if player.health <= 0:
+        #    state = DONE
         # Depois de processar os eventos.
         # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
         all_sprites.update()
