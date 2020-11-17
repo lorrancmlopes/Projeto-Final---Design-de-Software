@@ -329,8 +329,8 @@ def game_screen(window):
             player.health -= 1
             player.last_update = pygame.time.get_ticks()
             print(player.health)
-        #if player.health <= 0:
-        #    state = DONE
+        if player.health <= 0:
+            state = DONE
         # Depois de processar os eventos.
         # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
         all_sprites.update()
