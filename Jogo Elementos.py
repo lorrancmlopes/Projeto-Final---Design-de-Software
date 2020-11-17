@@ -240,6 +240,9 @@ def load_assets(img_dir):
     assets[BACKGROUND] = pygame.transform.scale(bg, (LARGURA, ALTURA))
     assets["score_font"] = pygame.font.Font('font/PressStart2P.ttf', 28)
     return assets
+# Carrega os sons do jogo
+pygame.mixer.music.load('snd/game_on.mp3')
+pygame.mixer.music.set_volume(0.4)
 
 def game_screen(window):
     # Variável para o ajuste de velocidade
@@ -292,6 +295,7 @@ def game_screen(window):
     DONE = 1
 
     state = PLAYING
+    pygame.mixer.music.play(loops=-1)
     while state != DONE:
 
         # Ajusta a velocidade do jogo.
