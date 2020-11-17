@@ -238,6 +238,7 @@ def load_assets(img_dir):
     assets[PLATF] = pygame.image.load(path.join(img_dir, 'tile-wood.png')).convert()
     bg = pygame.image.load(path.join(img_dir, 'background AR.jpg')).convert()
     assets[BACKGROUND] = pygame.transform.scale(bg, (LARGURA, ALTURA))
+    assets["score_font"] = pygame.font.Font('font/PressStart2P.ttf', 28)
     return assets
 
 def game_screen(window):
@@ -341,6 +342,11 @@ def game_screen(window):
         all_sprites.draw(window)
         inimigo_list.draw(window)
 
+        # Desenhando as vidas
+        text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
+        text_rect = text_surface.get_rect()
+        text_rect.bottomleft = (10, ALTURA - 1)
+        window.blit(text_surface, text_rect)
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
 
