@@ -14,6 +14,8 @@ ALTURA = 510
 TILE_SIZE = 40 # Tamanho de cada tile (cada tile é um quadrado)
 PLAYER_LARGURA = TILE_SIZE
 PLAYER_ALTURA = int(TILE_SIZE * 1.5)
+PONTO_LARGURA = 80
+PONTO_ALTURA = 80
 GRAVIDADE = 4
 FPS = 60
 
@@ -23,6 +25,7 @@ pygame.display.set_caption("Lord's Element")
 PLAYER_IMG = 'player_img'
 BACKGROUND = 'background_air'
 ENEMY = 'enemy_img'
+PONTOS = 'pontos_img'
 
 JUMP_SIZE = TILE_SIZE
 SPEED_X = 5
@@ -73,6 +76,7 @@ class Tile(pygame.sprite.Sprite):
 # Classe Jogador que representa o herói
 
 inimigo_list = pygame.sprite.Group()
+pontos_list = pygame.sprite.Group()
 
 class Player(pygame.sprite.Sprite):
 
@@ -111,6 +115,8 @@ class Player(pygame.sprite.Sprite):
         self.highest_y = self.rect.bottom
         #vida do jogador
         self.health = 3
+        #pontos adquiridos
+        self.pontos = 0 
         #tempo
         self.last_update = pygame.time.get_ticks()
         self.frame_ticks = 1000
@@ -229,9 +235,19 @@ class Enemy(pygame.sprite.Sprite):
 
         self.counter += 1
 
+class Point(pygame.sprite.Sprite):
+    def __init__(self,x,y,pontos_img):
+        pygame.sprite.Sprite.__init__(self)
+        pontos_img = pygame.transform.scale(pontos_img,((PONTO_LARGURA), (PONTO_ALTURA)))
+        self.image = pontos_img
+        self.image.convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
 def load_assets(img_dir):
     assets = {}
+    assets[PONTOS] = pygame.image.load(path.join(img_dir, 'pontos.png')).convert_alpha()
     assets[ENEMY] =  pygame.image.load(path.join(img_dir, 'enemy.png')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
     assets[BLOCK] = pygame.image.load(path.join(img_dir, 'bloco.png')).convert_alpha()
@@ -264,6 +280,8 @@ def game_screen(window):
 
     # Cria Sprite do jogador
     player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks)
+
+    #criando o inimigo
     inimigo = []
     inimigo_posicoes_x = [300, 700, 500, 120, 800]
     inimigo_posicoes_y = [420, 300, 100, 180, 20]
@@ -283,14 +301,27 @@ def game_screen(window):
                     blocks.add(tile)
                 elif tile_type == PLATF:
                     platforms.add(tile)
-
+    #criando os pontos de aprendizagem
+    points = []
+    pontos_posicoes_x = [400, 800, 600, 90, 900]
+    pontos_posicoes_y = [420, 300, 100, 180, 20]
+    N = 0
+    while N < len(pontos_posicoes_x):
+        points.append(Point(pontos_posicoes_x[N], pontos_posicoes_y[N], assets[PONTOS]))
+        N += 1
     # Adiciona o jogador e inimigo no grupo de sprites por último para ser desenhado por cima das plataformas
     all_sprites.add(player)
+
     w = 0 
     while w < len(inimigo):
         inimigo_list.add(inimigo[w])
         w += 1
     
+    B = 0 
+    while B < len(points):
+        pontos_list.add(points[B])
+        B += 1
+
     PLAYING = 0
     DONE = 1
 
@@ -332,9 +363,15 @@ def game_screen(window):
             player.contato = True
             player.health -= 1
             player.last_update = pygame.time.get_ticks()
-            print(player.health)
         if player.health <= 0:
             state = DONE
+
+        pegou_ponto = pygame.sprite.spritecollide(player, pontos_list, True)
+        if len(pegou_ponto) > 0 and player.contato == False:
+            player.contato = True
+            player.pontos += 1
+            player.last_update = pygame.time.get_ticks()
+        
         # Depois de processar os eventos.
         # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
         all_sprites.update()
@@ -345,12 +382,12 @@ def game_screen(window):
 
         all_sprites.draw(window)
         inimigo_list.draw(window)
+        pontos_list.draw(window)
 
         # Desenhando as vidas
         text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
         text_rect = text_surface.get_rect()
         text_rect.bottomleft = (10, ALTURA - 1)
-        window.blit(text_surface, text_rect)
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
 
