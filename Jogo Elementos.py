@@ -402,7 +402,7 @@ def game_screen(window):
                 player.contato = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
-            
+        
             # Depois de processar os eventos.
             # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
             all_sprites.update()
@@ -419,69 +419,16 @@ def game_screen(window):
             text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
             text_rect = text_surface.get_rect()
             text_rect.bottomleft = (10, ALTURA - 1)
+            window.blit(text_surface, text_rect)
+
+            #Desenhando os pontos
+            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
+            text_rect = text_surface.get_rect()
+            text_rect.midtop = (LARGURA / 2,  10)
+            window.blit(text_surface, text_rect)
+
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
-            # Verifica se apertou alguma tecla.
-            if event.type == pygame.KEYDOWN:
-                # Dependendo da tecla, altera o estado do jogador.
-                if event.key == pygame.K_LEFT:
-                    player.speedx -= SPEED_X
-                elif event.key == pygame.K_RIGHT:
-                    player.speedx += SPEED_X
-                elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
-                    player.jump()
-
-            # Verifica se soltou alguma tecla.
-            if event.type == pygame.KEYUP:
-                # Dependendo da tecla, altera o estado do jogador.
-                if event.key == pygame.K_LEFT:
-                    player.speedx += SPEED_X
-                elif event.key == pygame.K_RIGHT:
-                    player.speedx -= SPEED_X
-
-        for e in inimigo_list:
-                e.move()
-
-        encontro = pygame.sprite.spritecollide(player, inimigo_list, False)
-        if len(encontro) > 0 and player.contato == False:
-            player.contato = True
-            player.health -= 1
-            player.last_update = pygame.time.get_ticks()
-        if player.health <= 0:
-            state = DONE
-
-        pegou_ponto = pygame.sprite.spritecollide(player, pontos_list, True)
-        if len(pegou_ponto) > 0 and player.contato_ponto == False:
-            player.contato_ponto = True
-            player.pontos += 1
-            player.last_update_ponto = pygame.time.get_ticks()
-            print(player.pontos)
-        
-        # Depois de processar os eventos.
-        # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
-        all_sprites.update()
-
-        # A cada loop, redesenha o fundo e os sprites
-        window.fill((0, 0, 0))
-        window.blit(assets[BACKGROUND], (0, 0))
-
-        all_sprites.draw(window)
-        inimigo_list.draw(window)
-        pontos_list.draw(window)
-
-        # Desenhando as vidas
-        text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
-        text_rect = text_surface.get_rect()
-        text_rect.bottomleft = (10, ALTURA - 1)
-        window.blit(text_surface, text_rect)
-
-        #Desenhando os pontos
-        text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
-        text_rect = text_surface.get_rect()
-        text_rect.midtop = (LARGURA / 2,  10)
-        window.blit(text_surface, text_rect)
-        # Depois de desenhar tudo, inverte o display.
-        pygame.display.flip()
 
 # Comando para evitar travamentos.
 try:
