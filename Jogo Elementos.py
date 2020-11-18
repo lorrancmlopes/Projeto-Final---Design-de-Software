@@ -396,7 +396,6 @@ def game_screen(window):
                 player.last_update = pygame.time.get_ticks()
             if player.health <= 0:
                 state = DONE
-<<<<<<< HEAD
 
             pegou_ponto = pygame.sprite.spritecollide(player, pontos_list, True)
             if len(pegou_ponto) > 0 and player.contato == False:
@@ -422,7 +421,6 @@ def game_screen(window):
             text_rect.bottomleft = (10, ALTURA - 1)
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
-=======
             # Verifica se apertou alguma tecla.
             if event.type == pygame.KEYDOWN:
                 # Dependendo da tecla, altera o estado do jogador.
@@ -484,7 +482,6 @@ def game_screen(window):
         window.blit(text_surface, text_rect)
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
->>>>>>> aff6c7c64ae20a62a3e8d87e817e161a9a032f8a
 
 # Comando para evitar travamentos.
 try:
