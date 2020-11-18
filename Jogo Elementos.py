@@ -122,6 +122,9 @@ class Player(pygame.sprite.Sprite):
         self.last_update = pygame.time.get_ticks()
         self.frame_ticks = 1000
         self.contato = False
+        self.contato_ponto = False
+        self.last_update_ponto = pygame.time.get_ticks()
+
 
     # Metodo que atualiza a posição do personagem
     def update(self):
@@ -129,12 +132,17 @@ class Player(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         # Verifica quantos ticks se passaram desde a ultima mudança de frame.
         elapsed_ticks = now - self.last_update
-
+        elapsed_ticks_ponto = now - self.last_update_ponto
         # Se já está na hora de mudar de imagem...
         if elapsed_ticks > self.frame_ticks:
             # Marca o tick da nova imagem.
             self.contato = False
             self.last_update = now
+
+        if elapsed_ticks_ponto > self.frame_ticks:
+            # Marca o tick da nova imagem.
+            self.contato_ponto = False
+            self.last_update_ponto = now
         # Atualiza a velocidade aplicando a aceleração da gravidade
         self.speedy += GRAVIDADE
         # Atualiza o estado para caindo
@@ -225,8 +233,8 @@ class Enemy(pygame.sprite.Sprite):
         self.counter = 0
 
     def move(self):
-        distance = 40
-        speed = 2
+        distance = 30
+        speed = 1
         if self.counter >= 0 and self.counter <= distance:
             self.rect.x += speed
         elif self.counter >= distance and self.counter <= distance*2:
@@ -252,7 +260,7 @@ def load_assets(img_dir):
     assets[ENEMY] =  pygame.image.load(path.join(img_dir, 'enemy.png')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
     assets[BLOCK] = pygame.image.load(path.join(img_dir, 'bloco.png')).convert_alpha()
-    assets[PLATF] = pygame.image.load(path.join(img_dir, 'tile-wood.png')).convert()
+    assets[PLATF] = pygame.image.load(path.join(img_dir, 'arzinho.png')).convert()
     bg = pygame.image.load(path.join(img_dir, 'background AR.jpg')).convert()
     assets[BACKGROUND] = pygame.transform.scale(bg, (LARGURA, ALTURA))
     assets["score_font"] = pygame.font.Font('font/PressStart2P.ttf', 28)
@@ -286,8 +294,8 @@ def game_screen(window):
 
     #criando o inimigo
     inimigo = []
-    inimigo_posicoes_x = [300, 700, 500, 120, 800]
-    inimigo_posicoes_y = [420, 300, 100, 180, 20]
+    inimigo_posicoes_x = [300, 700, 400, 120]
+    inimigo_posicoes_y = [420, 300, 100, 180]
     i = 0
     while i < len(inimigo_posicoes_x):
         inimigo.append(Enemy(inimigo_posicoes_x[i], inimigo_posicoes_y[i], assets[ENEMY]))
@@ -388,6 +396,7 @@ def game_screen(window):
                 player.last_update = pygame.time.get_ticks()
             if player.health <= 0:
                 state = DONE
+<<<<<<< HEAD
 
             pegou_ponto = pygame.sprite.spritecollide(player, pontos_list, True)
             if len(pegou_ponto) > 0 and player.contato == False:
@@ -413,6 +422,69 @@ def game_screen(window):
             text_rect.bottomleft = (10, ALTURA - 1)
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
+=======
+            # Verifica se apertou alguma tecla.
+            if event.type == pygame.KEYDOWN:
+                # Dependendo da tecla, altera o estado do jogador.
+                if event.key == pygame.K_LEFT:
+                    player.speedx -= SPEED_X
+                elif event.key == pygame.K_RIGHT:
+                    player.speedx += SPEED_X
+                elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
+                    player.jump()
+
+            # Verifica se soltou alguma tecla.
+            if event.type == pygame.KEYUP:
+                # Dependendo da tecla, altera o estado do jogador.
+                if event.key == pygame.K_LEFT:
+                    player.speedx += SPEED_X
+                elif event.key == pygame.K_RIGHT:
+                    player.speedx -= SPEED_X
+
+        for e in inimigo_list:
+                e.move()
+
+        encontro = pygame.sprite.spritecollide(player, inimigo_list, False)
+        if len(encontro) > 0 and player.contato == False:
+            player.contato = True
+            player.health -= 1
+            player.last_update = pygame.time.get_ticks()
+        if player.health <= 0:
+            state = DONE
+
+        pegou_ponto = pygame.sprite.spritecollide(player, pontos_list, True)
+        if len(pegou_ponto) > 0 and player.contato_ponto == False:
+            player.contato_ponto = True
+            player.pontos += 1
+            player.last_update_ponto = pygame.time.get_ticks()
+            print(player.pontos)
+        
+        # Depois de processar os eventos.
+        # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
+        all_sprites.update()
+
+        # A cada loop, redesenha o fundo e os sprites
+        window.fill((0, 0, 0))
+        window.blit(assets[BACKGROUND], (0, 0))
+
+        all_sprites.draw(window)
+        inimigo_list.draw(window)
+        pontos_list.draw(window)
+
+        # Desenhando as vidas
+        text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
+        text_rect = text_surface.get_rect()
+        text_rect.bottomleft = (10, ALTURA - 1)
+        window.blit(text_surface, text_rect)
+
+        #Desenhando os pontos
+        text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (LARGURA / 2,  10)
+        window.blit(text_surface, text_rect)
+        # Depois de desenhar tudo, inverte o display.
+        pygame.display.flip()
+>>>>>>> aff6c7c64ae20a62a3e8d87e817e161a9a032f8a
 
 # Comando para evitar travamentos.
 try:
