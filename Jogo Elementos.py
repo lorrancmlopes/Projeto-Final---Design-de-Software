@@ -117,7 +117,7 @@ class Player(pygame.sprite.Sprite):
         #vida do jogador
         self.health = 3
         #pontos adquiridos
-        self.pontos = 0 
+        self.pontos = 0
         #tempo
         self.last_update = pygame.time.get_ticks()
         self.frame_ticks = 1000
@@ -212,7 +212,7 @@ class Player(pygame.sprite.Sprite):
             # Estava indo para a esquerda
             elif self.speedx < 0:
                 self.rect.left = collision.rect.right
-        
+
 
     # Método que faz o personagem pular
     def jump(self):
@@ -323,20 +323,21 @@ def game_screen(window):
     # Adiciona o jogador e inimigo no grupo de sprites por último para ser desenhado por cima das plataformas
     all_sprites.add(player)
 
-    w = 0 
+    w = 0
     while w < len(inimigo):
         inimigo_list.add(inimigo[w])
         w += 1
-    
-    B = 0 
+
+    B = 0
     while B < len(points):
         pontos_list.add(points[B])
         B += 1
 
 
     INICIO = 0
-    PLAYING = 1
-    DONE = 2
+    TELA1 = 1
+    TELA2 = 2
+    DONE = 3
 
     state = INICIO
     pygame.mixer.music.play(loops=-1)
@@ -351,7 +352,7 @@ def game_screen(window):
                     state = DONE
 
                 if event.type == pygame.KEYUP:
-                    state = PLAYING
+                    state = TELA1
 
             # A cada loop, redesenha o fundo e os sprites
             window.fill((255, 255, 255))
@@ -359,7 +360,7 @@ def game_screen(window):
 
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
-        if state == PLAYING:
+        if state == TELA1:
             # Ajusta a velocidade do jogo.
             clock.tick(FPS)
 
@@ -387,7 +388,7 @@ def game_screen(window):
                         player.speedx -= SPEED_X
 
             for e in inimigo_list:
-                    e.move()
+                e.move()
 
             encontro = pygame.sprite.spritecollide(player, inimigo_list, False)
             if len(encontro) > 0 and player.contato == False:
@@ -402,7 +403,9 @@ def game_screen(window):
                 player.contato = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
-        
+                if len(pontos_list) == 0:
+                    state = TELA2
+
             # Depois de processar os eventos.
             # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
             all_sprites.update()
@@ -429,6 +432,22 @@ def game_screen(window):
 
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
+
+        if state == TELA2:
+            # Ajusta a velocidade do jogo.
+            clock.tick(FPS)
+
+            # Processa os eventos (mouse, teclado, botão, etc).
+            for event in pygame.event.get():
+                # Verifica se foi fechado.
+                if event.type == pygame.QUIT:
+                    state = DONE
+
+            window.fill((255, 0, 0))
+
+            # Depois de desenhar tudo, inverte o display.
+            pygame.display.flip()
+
 
 # Comando para evitar travamentos.
 try:
