@@ -63,7 +63,7 @@ EMPTY = -1
 MAP2 = [
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, BLOCK2, BLOCK2, BLOCK2, EMPTY, EMPTY, BLOCK2, PLATF, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, PLATF2, PLATF2, BLOCK2, BLOCK2, BLOCK2],
+    [EMPTY, EMPTY, BLOCK2, BLOCK2, BLOCK2, EMPTY, EMPTY, BLOCK2, PLATF2, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, PLATF2, PLATF2, BLOCK2, BLOCK2, BLOCK2],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, PLATF2, PLATF2, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
@@ -322,17 +322,26 @@ def game_screen(window):
         i += 1
 
     # Cria tiles de acordo com o mapa
-    # for row in range(len(MAP1)):
-    #     for column in range(len(MAP1[row])):
-    #         tile_type = MAP1[row][column]
-    #         if tile_type != EMPTY:
-    #             tile = Tile(assets[tile_type], row, column)
+    for row in range(len(MAP1)):
+        for column in range(len(MAP1[row])):
+            tile_type = MAP1[row][column]
+            if tile_type != EMPTY:
+                tile = Tile(assets[tile_type], row, column)
+                all_sprites.add(tile)
+                if tile_type == BLOCK:
+                    blocks.add(tile)
+                elif tile_type == PLATF:
+                    platforms.add(tile)
+    # for row in range(len(MAP2)):
+    #     for column in range(len(MAP2[row])):
+    #         tile_type2 = MAP2[row][column]
+    #         if tile_type2 != EMPTY:
+    #             tile = Tile(assets[tile_type2], row, column)
     #             all_sprites.add(tile)
-    #             if tile_type == BLOCK:
+    #             if tile_type2 == BLOCK2:
     #                 blocks.add(tile)
-    #             elif tile_type == PLATF:
+    #             elif tile_type2 == PLATF2:
     #                 platforms.add(tile)
-
     #criando os pontos
     points = []
     points2 = []
@@ -365,8 +374,8 @@ def game_screen(window):
     TELA3 = 3
     TELA4 = 4
     DONE = 5
-
     state = INICIO
+
     pygame.mixer.music.play(loops=-1)
     while state != DONE:
         # Ajusta a velocidade do jogo.
@@ -389,17 +398,16 @@ def game_screen(window):
             pygame.display.flip()
         if state == TELA1:
             # Ajusta a velocidade do jogo.
-            clock.tick(FPS)
-            for row in range(len(MAP1)):
-                for column in range(len(MAP1[row])):
-                    tile_type = MAP1[row][column]
-                    if tile_type != EMPTY:
-                        tile = Tile(assets[BLOCK], row, column)
-                        all_sprites.add(tile)
-                        if tile_type == BLOCK:
-                            blocks.add(tile)
-                        elif tile_type == PLATF:
-                            platforms.add(tile)
+            # for row in range(len(MAP1)):
+            #     for column in range(len(MAP1[row])):
+            #         tile_type = MAP1[row][column]
+            #         if tile_type != EMPTY:
+            #             tile = Tile(assets[BLOCK], row, column)
+            #             all_sprites.add(tile)
+            #             if tile_type == BLOCK:
+            #                 blocks.add(tile)
+            #             elif tile_type == PLATF:
+            #                 platforms.add(tile)
             clock.tick(FPS)
             # Processa os eventos (mouse, teclado, botão, etc).
             for event in pygame.event.get():
@@ -476,15 +484,15 @@ def game_screen(window):
             # Ajusta a velocidade do jogo.
             clock.tick(FPS)
             for row in range(len(MAP2)):
-                for column in range(len(MAP2[row])):
-                    tile_type = MAP2[row][column]
-                    if tile_type != EMPTY:
-                        tile = Tile(assets[BLOCK2], row, column)
-                        all_sprites.add(tile)
-                        if tile_type == BLOCK2:
-                            blocks.add(tile)
-                        elif tile_type == PLATF2:
-                            platforms.add(tile)
+                    for column in range(len(MAP2[row])):
+                        tile_type = MAP2[row][column]
+                        if tile_type != EMPTY:
+                            tile = Tile(assets[BLOCK2], row, column)
+                            all_sprites.add(tile)
+                            if tile_type == BLOCK2:
+                                blocks.add(tile)
+                            elif tile_type == PLATF2:
+                                platforms.add(tile)
             # Processa os eventos (mouse, teclado, botão, etc).
             for event in pygame.event.get():
                 # Verifica se foi fechado.
