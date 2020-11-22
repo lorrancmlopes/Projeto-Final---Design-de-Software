@@ -24,9 +24,12 @@ pygame.display.set_caption("Lord's Element")
 
 PLAYER_IMG = 'player_img'
 BACKGROUND = 'background_air'
+BACKGROUND2 = 'background_fire'
 ENEMY = 'enemy_img'
+ENEMY2 = 'enemy2_img'
 PONTOS = 'pontos_img'
 INICIAL = 'inicio_img'
+FIRE = 'fire_img'
 
 JUMP_SIZE = TILE_SIZE
 SPEED_X = 5
@@ -78,6 +81,8 @@ class Tile(pygame.sprite.Sprite):
 
 inimigo_list = pygame.sprite.Group()
 pontos_list = pygame.sprite.Group()
+inimigo2_list = pygame.sprite.Group()
+fogo_list = pygame.sprite.Group()
 
 class Player(pygame.sprite.Sprite):
 
@@ -241,8 +246,31 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.x -= speed
         else:
             self.counter = 0
-
         self.counter += 1
+
+# def Enemy2(pygame.sprite.Sprite):
+#     def __init__(self,x,y,enemy2_img):
+#         pygame.sprite.Sprite.__init__(self)
+#         enemy_img = pygame.transform.scale(enemy_img, (PLAYER_LARGURA, PLAYER_ALTURA))
+#         self.image = enemy2_img
+#         self.image.convert_alpha()
+#         self.rect = self.image.get_rect()
+#         self.rect.x = x
+#         self.rect.y = y
+#         self.counter = 0
+
+#     def move(self):
+#         distance = 80
+#         speed = 1
+#         if self.counter >= 0 and self.counter <= distance:
+#             self.rect.x += speed
+#         elif self.counter >= distance and self.counter <= distance*2:
+#             self.rect.x -= speed
+#         else:
+#             self.counter = 0
+
+#         self.counter += 1
+
 
 class Point(pygame.sprite.Sprite):
     def __init__(self,x,y,pontos_img):
@@ -254,15 +282,30 @@ class Point(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+class Point2(pygame.sprite.Sprite):
+    def __init__(self,x,y,fire_img):
+        pygame.sprite.Sprite.__init__(self)
+        fire_img = pygame.transform.scale(fire_img,((PONTO_LARGURA), (PONTO_ALTURA)))
+        self.image = fire_img
+        self.image.convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+
 def load_assets(img_dir):
     assets = {}
     assets[PONTOS] = pygame.image.load(path.join(img_dir, 'pontos.png')).convert_alpha()
+    assets[FIRE] = pygame.image.load(path.join(img_dir, 'fire.png')).convert_alpha()
     assets[ENEMY] =  pygame.image.load(path.join(img_dir, 'enemy.png')).convert_alpha()
+    assets[ENEMY2] =  pygame.image.load(path.join(img_dir, 'inimigo2.png')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
     assets[BLOCK] = pygame.image.load(path.join(img_dir, 'bloco.png')).convert_alpha()
     assets[PLATF] = pygame.image.load(path.join(img_dir, 'arzinho.png')).convert()
     bg = pygame.image.load(path.join(img_dir, 'background AR.jpg')).convert()
+    bg2 = pygame.image.load(path.join(img_dir, 'background FOGO.jpg')).convert()
     assets[BACKGROUND] = pygame.transform.scale(bg, (LARGURA, ALTURA))
+    assets[BACKGROUND2] = pygame.transform.scale(bg2, (LARGURA, ALTURA))
     assets["score_font"] = pygame.font.Font('font/PressStart2P.ttf', 28)
     inicial = pygame.image.load(path.join(img_dir, 'FUNDOJOGO.jpg')).convert()
     assets[INICIAL] = pygame.transform.scale(inicial, (LARGURA, ALTURA))
@@ -292,13 +335,17 @@ def game_screen(window):
     # Cria Sprite do jogador
     player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks)
 
-    #criando o inimigo
+    #criando os inimigo
     inimigo = []
+    inimigo2 = []
     inimigo_posicoes_x = [300, 700, 400, 120]
     inimigo_posicoes_y = [420, 300, 100, 180]
+    inimigo2_posicoes_x = [300, 700, 400, 120]
+    inimigo2_posicoes_y = [420, 300, 100, 180]
     i = 0
     while i < len(inimigo_posicoes_x):
         inimigo.append(Enemy(inimigo_posicoes_x[i], inimigo_posicoes_y[i], assets[ENEMY]))
+        # inimigo2.append(Enemy2(inimigo_posicoes_x[i], inimigo_posicoes_y[i], assets[ENEMY2]))
         i += 1
 
     # Cria tiles de acordo com o mapa
@@ -314,11 +361,14 @@ def game_screen(window):
                     platforms.add(tile)
     #criando os pontos de aprendizagem
     points = []
+    points2 = []
     pontos_posicoes_x = [400, 800, 600, 90, 900]
     pontos_posicoes_y = [420, 300, 100, 180, 20]
+   
     N = 0
     while N < len(pontos_posicoes_x):
         points.append(Point(pontos_posicoes_x[N], pontos_posicoes_y[N], assets[PONTOS]))
+        points2.append(Point2(pontos_posicoes_x[N], pontos_posicoes_y[N], assets[FIRE]))
         N += 1
     # Adiciona o jogador e inimigo no grupo de sprites por último para ser desenhado por cima das plataformas
     all_sprites.add(player)
@@ -326,13 +376,14 @@ def game_screen(window):
     w = 0
     while w < len(inimigo):
         inimigo_list.add(inimigo[w])
+        # inimigo2_list.add(inimigo2[w])
         w += 1
 
     B = 0
     while B < len(points):
         pontos_list.add(points[B])
+        fogo_list.add(points2[B])
         B += 1
-
 
     INICIO = 0
     TELA1 = 1
@@ -442,12 +493,67 @@ def game_screen(window):
                 # Verifica se foi fechado.
                 if event.type == pygame.QUIT:
                     state = DONE
+                # Verifica se apertou alguma tecla.
+                if event.type == pygame.KEYDOWN:
+                    # Dependendo da tecla, altera o estado do jogador.
+                    if event.key == pygame.K_LEFT:
+                        player.speedx -= SPEED_X
+                    elif event.key == pygame.K_RIGHT:
+                        player.speedx += SPEED_X
+                    elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
+                        player.jump()
 
-            window.fill((255, 0, 0))
+                # Verifica se soltou alguma tecla.
+                if event.type == pygame.KEYUP:
+                    # Dependendo da tecla, altera o estado do jogador.
+                    if event.key == pygame.K_LEFT:
+                        player.speedx += SPEED_X
+                    elif event.key == pygame.K_RIGHT:
+                        player.speedx -= SPEED_X
+
+            for e in inimigo2_list:
+                e.move()
+
+            encontro2 = pygame.sprite.spritecollide(player, inimigo2_list, False)
+            if len(encontro2) > 0 and player.contato == False:
+                player.contato = True
+                player.health -= 1
+                player.last_update = pygame.time.get_ticks()
+            if player.health <= 0:
+                state = DONE
+
+            pegou_fogo = pygame.sprite.spritecollide(player, fogo_list, True)
+            if len(pegou_fogo) > 0 and player.contato == False:
+                player.contato = True
+                player.pontos += 1
+                player.last_update = pygame.time.get_ticks()
+
+            # Depois de processar os eventos.
+            # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
+            all_sprites.update()
+
+            # A cada loop, redesenha o fundo e os sprites
+            window.fill((0, 0, 0))
+            window.blit(assets[BACKGROUND2], (0, 0))
+
+            all_sprites.draw(window)
+            inimigo2_list.draw(window)
+            fogo_list.draw(window)
+
+            # Desenhando as vidas
+            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
+            text_rect = text_surface.get_rect()
+            text_rect.bottomleft = (10, ALTURA - 1)
+            window.blit(text_surface, text_rect)
+
+            #Desenhando os pontos
+            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
+            text_rect = text_surface.get_rect()
+            text_rect.midtop = (LARGURA / 2,  10)
+            window.blit(text_surface, text_rect)
 
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
-
 
 # Comando para evitar travamentos.
 try:
