@@ -27,9 +27,9 @@ BACKGROUND = 'background_air'
 BACKGROUND2 = 'background_fire'
 ENEMY = 'enemy_img'
 ENEMY2 = 'enemy2_img'
-PONTOS = 'pontos_img'
+PONTOS1 = 'pontos_img'
 INICIAL = 'inicio_img'
-FIRE = 'fire_img'
+PONTOS2 = 'fire_img'
 
 JUMP_SIZE = TILE_SIZE
 SPEED_X = 5
@@ -82,7 +82,7 @@ class Tile(pygame.sprite.Sprite):
 inimigo_list = pygame.sprite.Group()
 pontos_list = pygame.sprite.Group()
 inimigo2_list = pygame.sprite.Group()
-fogo_list = pygame.sprite.Group()
+pontos2_list = pygame.sprite.Group()
 
 class Player(pygame.sprite.Sprite):
 
@@ -248,10 +248,10 @@ class Enemy(pygame.sprite.Sprite):
             self.counter = 0
         self.counter += 1
 
-# def Enemy2(pygame.sprite.Sprite):
+# class Enemy2(pygame.sprite.Sprite):
 #     def __init__(self,x,y,enemy2_img):
 #         pygame.sprite.Sprite.__init__(self)
-#         enemy_img = pygame.transform.scale(enemy_img, (PLAYER_LARGURA, PLAYER_ALTURA))
+#         enemy2_img = pygame.transform.scale(enemy2_img, (PLAYER_LARGURA, PLAYER_ALTURA))
 #         self.image = enemy2_img
 #         self.image.convert_alpha()
 #         self.rect = self.image.get_rect()
@@ -282,21 +282,21 @@ class Point(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-class Point2(pygame.sprite.Sprite):
-    def __init__(self,x,y,fire_img):
-        pygame.sprite.Sprite.__init__(self)
-        fire_img = pygame.transform.scale(fire_img,((PONTO_LARGURA), (PONTO_ALTURA)))
-        self.image = fire_img
-        self.image.convert_alpha()
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+# class Point2(pygame.sprite.Sprite):
+#     def __init__(self,x,y,fire_img):
+#         pygame.sprite.Sprite.__init__(self)
+#         fire_img = pygame.transform.scale(fire_img,((PONTO_LARGURA), (PONTO_ALTURA)))
+#         self.image = fire_img
+#         self.image.convert_alpha()
+#         self.rect = self.image.get_rect()
+#         self.rect.x = x
+#         self.rect.y = y
 
 
 def load_assets(img_dir):
     assets = {}
-    assets[PONTOS] = pygame.image.load(path.join(img_dir, 'pontos.png')).convert_alpha()
-    assets[FIRE] = pygame.image.load(path.join(img_dir, 'fire.png')).convert_alpha()
+    assets[PONTOS1] = pygame.image.load(path.join(img_dir, 'pontos.png')).convert_alpha()
+    assets[PONTOS2] = pygame.image.load(path.join(img_dir, 'fire.png')).convert_alpha()
     assets[ENEMY] =  pygame.image.load(path.join(img_dir, 'enemy.png')).convert_alpha()
     assets[ENEMY2] =  pygame.image.load(path.join(img_dir, 'inimigo2.png')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
@@ -345,7 +345,7 @@ def game_screen(window):
     i = 0
     while i < len(inimigo_posicoes_x):
         inimigo.append(Enemy(inimigo_posicoes_x[i], inimigo_posicoes_y[i], assets[ENEMY]))
-        # inimigo2.append(Enemy2(inimigo_posicoes_x[i], inimigo_posicoes_y[i], assets[ENEMY2]))
+        inimigo2.append(Enemy(inimigo_posicoes_x[i], inimigo2_posicoes_y[i], assets[ENEMY2]))
         i += 1
 
     # Cria tiles de acordo com o mapa
@@ -367,8 +367,8 @@ def game_screen(window):
    
     N = 0
     while N < len(pontos_posicoes_x):
-        points.append(Point(pontos_posicoes_x[N], pontos_posicoes_y[N], assets[PONTOS]))
-        points2.append(Point2(pontos_posicoes_x[N], pontos_posicoes_y[N], assets[FIRE]))
+        points.append(Point(pontos_posicoes_x[N], pontos_posicoes_y[N], assets[PONTOS1]))
+        points2.append(Point(pontos_posicoes_x[N], pontos_posicoes_y[N], assets[PONTOS2]))
         N += 1
     # Adiciona o jogador e inimigo no grupo de sprites por último para ser desenhado por cima das plataformas
     all_sprites.add(player)
@@ -376,13 +376,13 @@ def game_screen(window):
     w = 0
     while w < len(inimigo):
         inimigo_list.add(inimigo[w])
-        # inimigo2_list.add(inimigo2[w])
+        inimigo2_list.add(inimigo2[w])
         w += 1
 
     B = 0
     while B < len(points):
         pontos_list.add(points[B])
-        fogo_list.add(points2[B])
+        pontos2_list.add(points2[B])
         B += 1
 
     INICIO = 0
@@ -522,7 +522,7 @@ def game_screen(window):
             if player.health <= 0:
                 state = DONE
 
-            pegou_fogo = pygame.sprite.spritecollide(player, fogo_list, True)
+            pegou_fogo = pygame.sprite.spritecollide(player, pontos2_list, True)
             if len(pegou_fogo) > 0 and player.contato == False:
                 player.contato = True
                 player.pontos += 1
@@ -538,7 +538,7 @@ def game_screen(window):
 
             all_sprites.draw(window)
             inimigo2_list.draw(window)
-            fogo_list.draw(window)
+            pontos2_list.draw(window)
 
             # Desenhando as vidas
             text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
