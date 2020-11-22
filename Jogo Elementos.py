@@ -16,6 +16,8 @@ PLAYER_LARGURA = TILE_SIZE
 PLAYER_ALTURA = int(TILE_SIZE * 1.5)
 PONTO_LARGURA = 80
 PONTO_ALTURA = 80
+ATAQUE_LARGURA = 20
+ATAQUE_ALTURA = 20
 GRAVIDADE = 4
 FPS = 60
 
@@ -30,6 +32,7 @@ ENEMY2 = 'enemy2_img'
 PONTOS1 = 'pontos_img'
 INICIAL = 'inicio_img'
 PONTOS2 = 'fire_img'
+ATAQUE1 = 'ataque1_img'
 
 JUMP_SIZE = TILE_SIZE
 SPEED_X = 5
@@ -37,8 +40,7 @@ SPEED_X = 5
 BLOCK = 0
 PLATF = 1
 EMPTY = -1
-
-MAP = [
+MAP1 = [
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, BLOCK, BLOCK, BLOCK, EMPTY, EMPTY, BLOCK, PLATF, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, PLATF, PLATF, BLOCK, BLOCK, BLOCK],
@@ -54,7 +56,25 @@ MAP = [
     [BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK],
     [BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK],
 ]
+BLOCK2 = 7
+PLATF2 = 8
+EMPTY = -1
 
+MAP2 = [
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, BLOCK2, BLOCK2, BLOCK2, EMPTY, EMPTY, BLOCK2, PLATF, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, PLATF2, PLATF2, BLOCK2, BLOCK2, BLOCK2],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, PLATF2, PLATF2, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, PLATF2, PLATF2, PLATF2, PLATF2],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, EMPTY, EMPTY, EMPTY, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2],    [BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2],
+]
 STILL = 0
 JUMPING = 1
 FALLING = 2
@@ -86,145 +106,105 @@ pontos2_list = pygame.sprite.Group()
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, player_img, row, column, platforms, blocks):
+    def __init__(self, player_img, row, column, platforms, blocks, all_ataque, ataque_img):
 
         pygame.sprite.Sprite.__init__(self)
-
-        # Define estado atual
-        # Usamos o estado para decidir se o jogador pode ou não pular
         self.state = STILL
-
-        # Ajusta o tamanho da imagem
         player_img = pygame.transform.scale(player_img, (PLAYER_LARGURA, PLAYER_ALTURA))
-
-        # Define a imagem do sprite. Nesse exemplo vamos usar uma imagem estática (não teremos animação durante o pulo)
         self.image = player_img
-        # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
-
-        # Guarda os grupos de sprites para tratar as colisões
+        self.all_ataque = all_ataque
+        self.ataque_img = ataque_img
         self.platforms = platforms
         self.blocks = blocks
-
-        # Posiciona o personagem
-        # row é o índice da linha embaixo do personagem
         self.rect.x = column * TILE_SIZE
         self.rect.bottom = row * TILE_SIZE
-
-        # Inicializa velocidades
         self.speedx = 0
         self.speedy = 0
-
-        # Define altura no mapa
-        # Essa variável sempre conterá a maior altura alcançada pelo jogador
-        # antes de começar a cair
         self.highest_y = self.rect.bottom
-        #vida do jogador
         self.health = 3
-        #pontos adquiridos
         self.pontos = 0
-        #tempo
         self.last_update = pygame.time.get_ticks()
         self.frame_ticks = 1000
         self.contato = False
         self.contato_ponto = False
         self.last_update_ponto = pygame.time.get_ticks()
 
-
-    # Metodo que atualiza a posição do personagem
     def update(self):
-        #verifica tempo do jogo
         now = pygame.time.get_ticks()
-        # Verifica quantos ticks se passaram desde a ultima mudança de frame.
         elapsed_ticks = now - self.last_update
         elapsed_ticks_ponto = now - self.last_update_ponto
-        # Se já está na hora de mudar de imagem...
         if elapsed_ticks > self.frame_ticks:
-            # Marca o tick da nova imagem.
             self.contato = False
             self.last_update = now
 
         if elapsed_ticks_ponto > self.frame_ticks:
-            # Marca o tick da nova imagem.
             self.contato_ponto = False
             self.last_update_ponto = now
-        # Atualiza a velocidade aplicando a aceleração da gravidade
         self.speedy += GRAVIDADE
-        # Atualiza o estado para caindo
         if self.speedy > 0:
             self.state = FALLING
-        # Atualiza a posição y
         self.rect.y += self.speedy
-
-        # Atualiza altura no mapa
         if self.state != FALLING:
             self.highest_y = self.rect.bottom
 
-        # Se colidiu com algum bloco, volta para o ponto antes da colisão
         collisions = pygame.sprite.spritecollide(self, self.blocks, False)
-        # Corrige a posição do personagem para antes da colisão
         for collision in collisions:
-            # Estava indo para baixo
             if self.speedy > 0:
                 self.rect.bottom = collision.rect.top
-                # Se colidiu com algo, para de cair
                 self.speedy = 0
-                # Atualiza o estado para parado
                 self.state = STILL
-            # Estava indo para cima
             elif self.speedy < 0:
                 self.rect.top = collision.rect.bottom
-                # Se colidiu com algo, para de cair
                 self.speedy = 0
-                # Atualiza o estado para parado
                 self.state = STILL
 
-        # Tratamento especial para plataformas
-        # Plataformas devem ser transponíveis quando o personagem está pulando
-        # mas devem pará-lo quando ele está caindo. Para pará-lo é necessário que
-        # o jogador tenha passado daquela altura durante o último pulo.
         if self.speedy > 0:  # Está indo para baixo
             collisions = pygame.sprite.spritecollide(self, self.platforms, False)
-            # Para cada tile de plataforma que colidiu com o personagem
-            # verifica se ele estava aproximadamente na parte de cima
             for platform in collisions:
-                # Verifica se a altura alcançada durante o pulo está acima da
-                # plataforma.
                 if self.highest_y <= platform.rect.top:
                     self.rect.bottom = platform.rect.top
-                    # Atualiza a altura no mapa
                     self.highest_y = self.rect.bottom
-                    # Para de cair
                     self.speedy = 0
-                    # Atualiza o estado para parado
                     self.state = STILL
 
-        # Tenta andar em x
         self.rect.x += self.speedx
-        # Corrige a posição caso tenha passado do tamanho da janela
         if self.rect.left < 0:
             self.rect.left = 0
         elif self.rect.right >= LARGURA:
             self.rect.right = LARGURA - 1
-        # Se colidiu com algum bloco, volta para o ponto antes da colisão
-        # O personagem não colide com as plataformas quando está andando na horizontal
+
         collisions = pygame.sprite.spritecollide(self, self.blocks, False)
-        # Corrige a posição do personagem para antes da colisão
         for collision in collisions:
-            # Estava indo para a direita
             if self.speedx > 0:
                 self.rect.right = collision.rect.left
-            # Estava indo para a esquerda
             elif self.speedx < 0:
                 self.rect.left = collision.rect.right
 
-
-    # Método que faz o personagem pular
     def jump(self):
-        # Só pode pular se ainda não estiver pulando ou caindo
         if self.state == STILL:
             self.speedy -= JUMP_SIZE
             self.state = JUMPING
+    def shoot(self):
+        # A nova bala vai ser criada logo acima e no centro horizontal da nave
+        new_ataque = Bullet(self.bullet_img, self.rect.right, self.rect.centerx)
+        self.all_bullets.add(new_bullet)
+
+class Ataque(pygame.sprite.Sprite):
+    def __init__(self, img, bottom, centerx):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = img
+        self.rect = self.image.get_rect()
+
+        self.rect.centerx = centerx
+        self.rect.bottom = bottom
+        self.speedx = -10 
+
+    def update(self):
+        self.rect.x += self.speedy
+        if self.rect.right < 0 or self.rect.left < 0:
+            self.kill()
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,x,y,enemy_img):
@@ -301,7 +281,9 @@ def load_assets(img_dir):
     assets[ENEMY2] =  pygame.image.load(path.join(img_dir, 'inimigo2.png')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
     assets[BLOCK] = pygame.image.load(path.join(img_dir, 'bloco.png')).convert_alpha()
+    assets[BLOCK2] = pygame.image.load(path.join(img_dir, 'bloco2.png')).convert_alpha()
     assets[PLATF] = pygame.image.load(path.join(img_dir, 'arzinho.png')).convert()
+    assets[PLATF2] = pygame.image.load(path.join(img_dir, 'foguinho.png')).convert()
     bg = pygame.image.load(path.join(img_dir, 'background AR.jpg')).convert()
     bg2 = pygame.image.load(path.join(img_dir, 'background FOGO.jpg')).convert()
     assets[BACKGROUND] = pygame.transform.scale(bg, (LARGURA, ALTURA))
@@ -309,6 +291,7 @@ def load_assets(img_dir):
     assets["score_font"] = pygame.font.Font('font/PressStart2P.ttf', 28)
     inicial = pygame.image.load(path.join(img_dir, 'FUNDOJOGO.jpg')).convert()
     assets[INICIAL] = pygame.transform.scale(inicial, (LARGURA, ALTURA))
+    assets[ATAQUE1] = pygame.image.load(path.join(img_dir, 'ataque1.png')).convert_alpha()
     return assets
 # Carrega os sons do jogo
 pygame.mixer.music.load('snd/game_on.mp3')
@@ -317,25 +300,15 @@ pygame.mixer.music.set_volume(0.4)
 def game_screen(window):
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
-
-    # Carrega assets
+    all_ataque = pygame.sprite.Group()
     assets = load_assets(img_dir)
 
-    # Cria um grupo de todos os sprites.
     all_sprites = pygame.sprite.Group()
-    # Cria um grupo somente com os sprites de plataforma.
-    # Sprites de plataforma são aqueles que permitem que o jogador passe quando
-    # estiver pulando, mas pare quando estiver caindo.
     platforms = pygame.sprite.Group()
-    # Cria um grupo somente com os sprites de bloco.
-    # Sprites de block são aqueles que impedem o movimento do jogador, independente
-    # de onde ele está vindo
     blocks = pygame.sprite.Group()
 
-    # Cria Sprite do jogador
-    player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks)
+    player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks, all_ataque, assets[ATAQUE1])
 
-    #criando os inimigo
     inimigo = []
     inimigo2 = []
     inimigo_posicoes_x = [300, 700, 400, 120]
@@ -345,21 +318,22 @@ def game_screen(window):
     i = 0
     while i < len(inimigo_posicoes_x):
         inimigo.append(Enemy(inimigo_posicoes_x[i], inimigo_posicoes_y[i], assets[ENEMY]))
-        inimigo2.append(Enemy(inimigo_posicoes_x[i], inimigo2_posicoes_y[i], assets[ENEMY2]))
+        inimigo2.append(Enemy(inimigo2_posicoes_x[i], inimigo2_posicoes_y[i], assets[ENEMY2]))
         i += 1
 
     # Cria tiles de acordo com o mapa
-    for row in range(len(MAP)):
-        for column in range(len(MAP[row])):
-            tile_type = MAP[row][column]
-            if tile_type != EMPTY:
-                tile = Tile(assets[tile_type], row, column)
-                all_sprites.add(tile)
-                if tile_type == BLOCK:
-                    blocks.add(tile)
-                elif tile_type == PLATF:
-                    platforms.add(tile)
-    #criando os pontos de aprendizagem
+    # for row in range(len(MAP1)):
+    #     for column in range(len(MAP1[row])):
+    #         tile_type = MAP1[row][column]
+    #         if tile_type != EMPTY:
+    #             tile = Tile(assets[tile_type], row, column)
+    #             all_sprites.add(tile)
+    #             if tile_type == BLOCK:
+    #                 blocks.add(tile)
+    #             elif tile_type == PLATF:
+    #                 platforms.add(tile)
+
+    #criando os pontos
     points = []
     points2 = []
     pontos_posicoes_x = [400, 800, 600, 90, 900]
@@ -388,7 +362,9 @@ def game_screen(window):
     INICIO = 0
     TELA1 = 1
     TELA2 = 2
-    DONE = 3
+    TELA3 = 3
+    TELA4 = 4
+    DONE = 5
 
     state = INICIO
     pygame.mixer.music.play(loops=-1)
@@ -414,7 +390,17 @@ def game_screen(window):
         if state == TELA1:
             # Ajusta a velocidade do jogo.
             clock.tick(FPS)
-
+            for row in range(len(MAP1)):
+                for column in range(len(MAP1[row])):
+                    tile_type = MAP1[row][column]
+                    if tile_type != EMPTY:
+                        tile = Tile(assets[BLOCK], row, column)
+                        all_sprites.add(tile)
+                        if tile_type == BLOCK:
+                            blocks.add(tile)
+                        elif tile_type == PLATF:
+                            platforms.add(tile)
+            clock.tick(FPS)
             # Processa os eventos (mouse, teclado, botão, etc).
             for event in pygame.event.get():
                 # Verifica se foi fechado.
@@ -429,7 +415,8 @@ def game_screen(window):
                         player.speedx += SPEED_X
                     elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
                         player.jump()
-
+                    if event.type == pygame.K_q:
+                        player.shoot()
                 # Verifica se soltou alguma tecla.
                 if event.type == pygame.KEYUP:
                     # Dependendo da tecla, altera o estado do jogador.
@@ -466,6 +453,7 @@ def game_screen(window):
             window.blit(assets[BACKGROUND], (0, 0))
 
             all_sprites.draw(window)
+            all_ataque.draw(window)
             inimigo_list.draw(window)
             pontos_list.draw(window)
 
@@ -487,7 +475,16 @@ def game_screen(window):
         if state == TELA2:
             # Ajusta a velocidade do jogo.
             clock.tick(FPS)
-
+            for row in range(len(MAP2)):
+                for column in range(len(MAP2[row])):
+                    tile_type = MAP2[row][column]
+                    if tile_type != EMPTY:
+                        tile = Tile(assets[BLOCK2], row, column)
+                        all_sprites.add(tile)
+                        if tile_type == BLOCK2:
+                            blocks.add(tile)
+                        elif tile_type == PLATF2:
+                            platforms.add(tile)
             # Processa os eventos (mouse, teclado, botão, etc).
             for event in pygame.event.get():
                 # Verifica se foi fechado.
