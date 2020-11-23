@@ -34,6 +34,7 @@ PONTOS1 = 'pontos_img'
 INICIAL = 'inicio_img'
 PONTOS2 = 'fire_img'
 ATAQUE1 = 'ataque1_img'
+GAMEOVER = 'avatar_elementos'
 
 JUMP_SIZE = TILE_SIZE
 SPEED_X = 5
@@ -130,7 +131,7 @@ class Player(pygame.sprite.Sprite):
         self.contato = False
         self.contato_ponto = False
         self.last_update_ponto = pygame.time.get_ticks()
-
+        self.direcao = 1
     def update(self):
         now = pygame.time.get_ticks()
         elapsed_ticks = now - self.last_update
@@ -188,19 +189,22 @@ class Player(pygame.sprite.Sprite):
             self.state = JUMPING
     def shoot(self):
         # A nova bala vai ser criada logo acima e no centro horizontal da nave
-        new_ataque = Ataque(self.ataque_img, self.rect.centerx, self.rect.bottom)
+        new_ataque = Ataque(self.ataque_img, self.rect.centerx, self.rect.bottom, self.direcao)
         self.all_ataque.add(new_ataque)
+        
+        # ataques_lista = []
+        # ataques_lista.append(new_ataque)
 
 class Ataque(pygame.sprite.Sprite):
-    def __init__(self, img, centerx, bottom):
+    def __init__(self, img, centerx, bottom, direcao):
         pygame.sprite.Sprite.__init__(self)
         img = pygame.transform.scale(img, (ATAQUE_LARGURA, ATAQUE_ALTURA))
         self.image = img
         self.rect = self.image.get_rect()
-
         self.rect.centerx = centerx
-        self.speedx = 10 
+        self.speedx = 10*direcao 
         self.rect.bottom = bottom
+
     def update(self):
         self.rect.x += self.speedx
 
@@ -270,6 +274,8 @@ def load_assets(img_dir):
     assets["score_font"] = pygame.font.Font('font/PressStart2P.ttf', 28)
     inicial = pygame.image.load(path.join(img_dir, 'inicio.png')).convert()
     assets[INICIAL] = pygame.transform.scale(inicial, (LARGURA, ALTURA))
+    gameover = pygame.image.load(path.join(img_dir, 'avatar elementos.jpg')).convert()
+    assets[GAMEOVER] = pygame.transform.scale(gameover, (LARGURA, ALTURA))
     assets[ATAQUE1] = pygame.image.load(path.join(img_dir, 'ataque1.png')).convert_alpha()
     return assets
 # Carrega os sons do jogo
@@ -347,13 +353,14 @@ def game_screen(window):
         pontos_list.add(points[B])
         pontos2_list.add(points2[B])
         B += 1
-
+    Mapa2_criado = False
     INICIO = 0
     TELA1 = 1
     TELA2 = 2
     TELA3 = 3
     TELA4 = 4
-    DONE = 5
+    TELAFINAL = 5  
+    DONE = 6
     state = INICIO
     
     # font = pygame.font.SysFont(None, 48)
@@ -408,8 +415,10 @@ def game_screen(window):
                     # Dependendo da tecla, altera o estado do jogador.
                     if event.key == pygame.K_LEFT:
                         player.speedx -= SPEED_X
+                        player.direcao = -1
                     elif event.key == pygame.K_RIGHT:
                         player.speedx += SPEED_X
+                        player.direcao = 1
                     elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
                         player.jump()
                     if event.key == ord('q'):
@@ -424,6 +433,8 @@ def game_screen(window):
 
             for e in inimigo_list:
                 e.move()
+            for ataque in player.all_ataque:
+                sprite = pygame.sprite.spritecollide(ataque, inimigo_list, True)
 
             encontro = pygame.sprite.spritecollide(player, inimigo_list, False)
             if len(encontro) > 0 and player.contato == False:
@@ -431,8 +442,7 @@ def game_screen(window):
                 player.health -= 1
                 player.last_update = pygame.time.get_ticks()
             if player.health <= 0:
-                state = DONE
-
+                state = TELAFINAL
                 
             pegou_ponto = pygame.sprite.spritecollide(player, pontos_list, True)
             if len(pegou_ponto) > 0 and player.contato == False:
@@ -472,8 +482,8 @@ def game_screen(window):
             pygame.display.flip()
 
         if state == TELA2:
-        
-            for row in range(len(MAP2)):
+            if Mapa2_criado == False:
+                for row in range(len(MAP2)):
                     for column in range(len(MAP2[row])):
                         tile_type = MAP2[row][column]
                         if tile_type != EMPTY:
@@ -483,6 +493,8 @@ def game_screen(window):
                                 blocks.add(tile)
                             elif tile_type == PLATF2:
                                 platforms.add(tile)
+                Mapa2_criado = True
+
             clock.tick(FPS)                    
             # Processa os eventos (mouse, teclado, botão, etc).
             for event in pygame.event.get():
@@ -550,7 +562,25 @@ def game_screen(window):
 
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
-
+        if state == TELAFINAL:
+            font3 = pygame.font.SysFont('Algerian', 100)
+            text3 = font3.render("GAME OVER", False, (255, 255, 255))
+            # Processa os eventos (mouse, teclado, botão, etc).
+            for event in pygame.event.get():
+                # Verifica se foi fechado.
+                if event.type == pygame.QUIT:
+                    state = DONE
+                if event.type == pygame.KEYUP:
+                    # Dependendo da tecla, altera o estado do jogador.
+                    if event.key == ord('r'): #reseta, mas não volta os pontos para pegar ('ar')
+                        state = TELA1
+                        player.health = 3
+                        
+                        
+            window.fill((255, 255, 255))
+            window.blit(assets[GAMEOVER], (0, 0))
+            window.blit(text3, ((LARGURA/2 - 300), (ALTURA/2 - 50)))
+            pygame.display.flip()
 # Comando para evitar travamentos.
 try:
     game_screen(window)
