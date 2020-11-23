@@ -361,6 +361,7 @@ def game_screen(window):
     TELA4 = 4
     TELAFINAL = 5  
     DONE = 6
+    RESTART = 7
     state = INICIO
     
     # font = pygame.font.SysFont(None, 48)
@@ -573,19 +574,38 @@ def game_screen(window):
                 if event.type == pygame.KEYUP:
                     # Dependendo da tecla, altera o estado do jogador.
                     if event.key == ord('r'): #reseta, mas não volta os pontos para pegar ('ar')
-                        state = TELA1
-                        player.health = 3
-                        
+                        #state = TELA1
+                        #player.health = 3
+                        window.fill((255, 255, 255))
+                        return INICIO
                         
             window.fill((255, 255, 255))
             window.blit(assets[GAMEOVER], (0, 0))
             window.blit(text3, ((LARGURA/2 - 300), (ALTURA/2 - 50)))
             pygame.display.flip()
 # Comando para evitar travamentos.
-try:
-    game_screen(window)
-finally:
-    pygame.quit()
+# try:
+#     game_screen(window)
+# finally:
+#     pygame.quit()
+INICIO = 0
+TELA1 = 1
+TELA2 = 2
+TELA3 = 3
+TELA4 = 4
+TELAFINAL = 5  
+DONE = 6
+RESTART = 7
+state = INICIO
+while state != DONE:
+    if state == INICIO:
+        state = game_screen(window)
+        print(f"Reiniciar {state}")
+    else:
+        state = DONE
+
+# ===== Finalização =====
+pygame.quit()
 
 
 
