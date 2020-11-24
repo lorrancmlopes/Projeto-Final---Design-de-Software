@@ -253,7 +253,8 @@ class Point(pygame.sprite.Sprite):
 def load_assets(img_dir):
     assets = {}
     assets[PONTOS1] = pygame.image.load(path.join(img_dir, 'pontos.png')).convert_alpha()
-    assets[PONTOS2] = pygame.image.load(path.join(img_dir, 'fire.png')).convert_alpha()
+    point2 = pygame.image.load(path.join(img_dir, 'fire.png')).convert_alpha()
+    assets[PONTOS2] = pygame.transform.scale(point2, (PONTO_LARGURA, PONTO_ALTURA))
     assets[ENEMY] =  pygame.image.load(path.join(img_dir, 'enemy.png')).convert_alpha()
     assets[ENEMY2] =  pygame.image.load(path.join(img_dir, 'inimigo2.png')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
@@ -379,6 +380,7 @@ def game_screen(window):
             pygame.display.flip()
         if state == TELA1:
             # Ajusta a velocidade do jogo.
+        
             if Mapa1_criado == False:
                 for row in range(len(MAP1)):
                     for column in range(len(MAP1[row])):
@@ -471,7 +473,6 @@ def game_screen(window):
             pygame.display.flip()
 
         if state == TELA2:
-            
             if Mapa2_criado == False: 
                 for row in range(len(MAP2)):
                     for column in range(len(MAP2[row])):
