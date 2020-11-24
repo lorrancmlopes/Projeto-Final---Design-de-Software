@@ -529,7 +529,7 @@ def game_screen(window):
                 player.health -= 1
                 player.last_update = pygame.time.get_ticks()
             if player.health <= 0:
-                state = DONE
+                state = TELAFINAL
 
             pegou_fogo = pygame.sprite.spritecollide(player, pontos2_list, True)
             if len(pegou_fogo) > 0 and player.contato == False:
