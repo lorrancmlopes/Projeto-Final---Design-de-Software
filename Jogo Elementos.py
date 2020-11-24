@@ -35,7 +35,7 @@ ENEMY3 = 'enemy3_img'
 PONTOS1 = 'pontos_img'
 INICIAL = 'inicio_img'
 PONTOS2 = 'fire_img'
-PONTOS3 = 'fire_img'
+PONTOS3 = 'water_img'
 ATAQUE1 = 'ataque1_img'
 GAMEOVER = 'avatar_elementos'
 
@@ -97,8 +97,8 @@ MAP3 = [
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],    
-    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3],    
+    [BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3],
 ]
 STILL = 0
 JUMPING = 1
@@ -276,11 +276,12 @@ def load_assets(img_dir):
     assets = {}
     assets[PONTOS1] = pygame.image.load(path.join(img_dir, 'pontos.png')).convert_alpha()
     point2 = pygame.image.load(path.join(img_dir, 'fire.png')).convert_alpha()
+    points3 = pygame.image.load(path.join(img_dir, 'pontos3.png')).convert_alpha()
     assets[PONTOS2] = pygame.transform.scale(point2, (PONTO_LARGURA, PONTO_ALTURA))
-    assets[PONTOS3] = pygame.transform.scale(point2, (PONTO_LARGURA, PONTO_ALTURA))
+    assets[PONTOS3] = pygame.transform.scale(points3, (PONTO_LARGURA, PONTO_ALTURA))
     assets[ENEMY] =  pygame.image.load(path.join(img_dir, 'enemy.png')).convert_alpha()
     assets[ENEMY2] =  pygame.image.load(path.join(img_dir, 'inimigo2.png')).convert_alpha()
-    assets[ENEMY3] =  pygame.image.load(path.join(img_dir, 'enemy3.jpg')).convert_alpha()
+    assets[ENEMY3] =  pygame.image.load(path.join(img_dir, 'enemy3.png')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
     assets[BLOCK] = pygame.image.load(path.join(img_dir, 'bloco.png')).convert_alpha()
     assets[BLOCK2] = pygame.image.load(path.join(img_dir, 'bloco2.png')).convert_alpha()
