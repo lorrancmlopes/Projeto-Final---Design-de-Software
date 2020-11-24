@@ -101,6 +101,8 @@ class Tile(pygame.sprite.Sprite):
 
 # Classe Jogador que representa o herói
 
+
+
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, player_img, row, column, platforms, blocks, all_ataque, ataque_img):
@@ -290,6 +292,11 @@ def game_screen(window):
     all_sprites = pygame.sprite.Group()
     platforms = pygame.sprite.Group()
     blocks = pygame.sprite.Group()
+
+    inimigo_list = pygame.sprite.Group()     #grupos de inimigos e pontos coletáveis
+    pontos_list = pygame.sprite.Group()
+    inimigo2_list = pygame.sprite.Group()
+    pontos2_list = pygame.sprite.Group()
 
     player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks, all_ataque, assets[ATAQUE1])
 
@@ -497,7 +504,7 @@ def game_screen(window):
                         player.direcao = 1
                     elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
                         player.jump()
-                    elif event.key == ord('q'):
+                    if event.key == ord('q'):
                         player.shoot()
                 # Verifica se soltou alguma tecla.
                 if event.type == pygame.KEYUP:
@@ -509,6 +516,8 @@ def game_screen(window):
 
             for e in inimigo2_list:
                 e.move()
+            for ataque in player.all_ataque:
+                sprite = pygame.sprite.spritecollide(ataque, inimigo2_list, True)
 
             encontro2 = pygame.sprite.spritecollide(player, inimigo2_list, False)
             if len(encontro2) > 0 and player.contato == False:
