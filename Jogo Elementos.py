@@ -101,11 +101,6 @@ class Tile(pygame.sprite.Sprite):
 
 # Classe Jogador que representa o herói
 
-inimigo_list = pygame.sprite.Group()
-pontos_list = pygame.sprite.Group()
-inimigo2_list = pygame.sprite.Group()
-pontos2_list = pygame.sprite.Group()
-
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, player_img, row, column, platforms, blocks, all_ataque, ataque_img):
@@ -284,6 +279,10 @@ pygame.mixer.music.set_volume(0.4)
 
 def game_screen(window):
     # Variável para o ajuste de velocidade
+    inimigo_list = pygame.sprite.Group()
+    pontos_list = pygame.sprite.Group()
+    inimigo2_list = pygame.sprite.Group()
+    pontos2_list = pygame.sprite.Group()
     clock = pygame.time.Clock()
     all_ataque = pygame.sprite.Group()
     assets = load_assets(img_dir)
@@ -306,27 +305,7 @@ def game_screen(window):
         inimigo2.append(Enemy(inimigo2_posicoes_x[i], inimigo2_posicoes_y[i], assets[ENEMY2]))
         i += 1
 
-    # Cria tiles de acordo com o mapa
-    for row in range(len(MAP1)):
-        for column in range(len(MAP1[row])):
-            tile_type = MAP1[row][column]
-            if tile_type != EMPTY:
-                tile = Tile(assets[tile_type], row, column)
-                all_sprites.add(tile)
-                if tile_type == BLOCK:
-                    blocks.add(tile)
-                elif tile_type == PLATF:
-                    platforms.add(tile)
-    # for row in range(len(MAP2)):
-    #     for column in range(len(MAP2[row])):
-    #         tile_type2 = MAP2[row][column]
-    #         if tile_type2 != EMPTY:
-    #             tile = Tile(assets[tile_type2], row, column)
-    #             all_sprites.add(tile)
-    #             if tile_type2 == BLOCK2:
-    #                 blocks.add(tile)
-    #             elif tile_type2 == PLATF2:
-    #                 platforms.add(tile)
+    
     #criando os pontos
     points = []
     points2 = []
@@ -353,6 +332,7 @@ def game_screen(window):
         pontos_list.add(points[B])
         pontos2_list.add(points2[B])
         B += 1
+    Mapa1_criado = False
     Mapa2_criado = False
     INICIO = 0
     TELA1 = 1
@@ -395,16 +375,18 @@ def game_screen(window):
             pygame.display.flip()
         if state == TELA1:
             # Ajusta a velocidade do jogo.
-            # for row in range(len(MAP1)):
-            #     for column in range(len(MAP1[row])):
-            #         tile_type = MAP1[row][column]
-            #         if tile_type != EMPTY:
-            #             tile = Tile(assets[BLOCK], row, column)
-            #             all_sprites.add(tile)
-            #             if tile_type == BLOCK:
-            #                 blocks.add(tile)
-            #             elif tile_type == PLATF:
-            #                 platforms.add(tile)
+            if Mapa1_criado == False:
+                for row in range(len(MAP1)):
+                    for column in range(len(MAP1[row])):
+                        tile_type = MAP1[row][column]
+                        if tile_type != EMPTY:
+                            tile = Tile(assets[BLOCK], row, column)
+                            all_sprites.add(tile)
+                            if tile_type == BLOCK:
+                                blocks.add(tile)
+                            elif tile_type == PLATF:
+                                platforms.add(tile)
+                Mapa1_criado = True                
             clock.tick(FPS)
             # Processa os eventos (mouse, teclado, botão, etc).
             for event in pygame.event.get():
@@ -422,7 +404,7 @@ def game_screen(window):
                         player.direcao = 1
                     elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
                         player.jump()
-                    if event.key == ord('q'):
+                    elif event.key == ord('q'):
                         player.shoot()
                 # Verifica se soltou alguma tecla.
                 if event.type == pygame.KEYUP:
@@ -434,8 +416,10 @@ def game_screen(window):
 
             for e in inimigo_list:
                 e.move()
+            
             for ataque in player.all_ataque:
                 sprite = pygame.sprite.spritecollide(ataque, inimigo_list, True)
+                
 
             encontro = pygame.sprite.spritecollide(player, inimigo_list, False)
             if len(encontro) > 0 and player.contato == False:
@@ -497,6 +481,7 @@ def game_screen(window):
                 Mapa2_criado = True
 
             clock.tick(FPS)                    
+
             # Processa os eventos (mouse, teclado, botão, etc).
             for event in pygame.event.get():
                 # Verifica se foi fechado.
@@ -509,9 +494,11 @@ def game_screen(window):
                         player.speedx -= SPEED_X
                     elif event.key == pygame.K_RIGHT:
                         player.speedx += SPEED_X
+                        player.direcao = 1
                     elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
                         player.jump()
-
+                    elif event.key == ord('q'):
+                        player.shoot()
                 # Verifica se soltou alguma tecla.
                 if event.type == pygame.KEYUP:
                     # Dependendo da tecla, altera o estado do jogador.
@@ -530,6 +517,9 @@ def game_screen(window):
                 player.last_update = pygame.time.get_ticks()
             if player.health <= 0:
                 state = TELAFINAL
+            
+            for ataque in player.all_ataque:
+                sprite = pygame.sprite.spritecollide(ataque, inimigo2_list, True)
 
             pegou_fogo = pygame.sprite.spritecollide(player, pontos2_list, True)
             if len(pegou_fogo) > 0 and player.contato == False:
@@ -540,12 +530,14 @@ def game_screen(window):
             # Depois de processar os eventos.
             # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
             all_sprites.update()
-
+            all_ataque.update()
+            
             # A cada loop, redesenha o fundo e os sprites
             window.fill((0, 0, 0))
             window.blit(assets[BACKGROUND2], (0, 0))
 
             all_sprites.draw(window)
+            all_ataque.draw(window)
             inimigo2_list.draw(window)
             pontos2_list.draw(window)
 
