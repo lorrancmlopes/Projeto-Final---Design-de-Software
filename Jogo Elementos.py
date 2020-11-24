@@ -28,11 +28,14 @@ pygame.display.set_caption("Lord's Element")
 PLAYER_IMG = 'player_img'
 BACKGROUND = 'background_air'
 BACKGROUND2 = 'background_fire'
+BACKGROUND3 = 'fundoagua'
 ENEMY = 'enemy_img'
 ENEMY2 = 'enemy2_img'
+ENEMY3 = 'enemy3_img'
 PONTOS1 = 'pontos_img'
 INICIAL = 'inicio_img'
 PONTOS2 = 'fire_img'
+PONTOS3 = 'fire_img'
 ATAQUE1 = 'ataque1_img'
 GAMEOVER = 'avatar_elementos'
 
@@ -77,6 +80,25 @@ MAP2 = [
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2],    
     [BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2, BLOCK2],
+]
+BLOCK3 = 12
+PLATF3 = 13
+EMPTY = -1
+MAP3 = [
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],    
+    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
 ]
 STILL = 0
 JUMPING = 1
@@ -255,17 +277,22 @@ def load_assets(img_dir):
     assets[PONTOS1] = pygame.image.load(path.join(img_dir, 'pontos.png')).convert_alpha()
     point2 = pygame.image.load(path.join(img_dir, 'fire.png')).convert_alpha()
     assets[PONTOS2] = pygame.transform.scale(point2, (PONTO_LARGURA, PONTO_ALTURA))
+    assets[PONTOS3] = pygame.transform.scale(point2, (PONTO_LARGURA, PONTO_ALTURA))
     assets[ENEMY] =  pygame.image.load(path.join(img_dir, 'enemy.png')).convert_alpha()
     assets[ENEMY2] =  pygame.image.load(path.join(img_dir, 'inimigo2.png')).convert_alpha()
+    assets[ENEMY3] =  pygame.image.load(path.join(img_dir, 'enemy3.jpg')).convert_alpha()
     assets[PLAYER_IMG] = pygame.image.load(path.join(img_dir, 'player.png')).convert_alpha()
     assets[BLOCK] = pygame.image.load(path.join(img_dir, 'bloco.png')).convert_alpha()
     assets[BLOCK2] = pygame.image.load(path.join(img_dir, 'bloco2.png')).convert_alpha()
+    assets[BLOCK3] = pygame.image.load(path.join(img_dir, 'bloco3.png')).convert_alpha()
     assets[PLATF] = pygame.image.load(path.join(img_dir, 'arzinho.png')).convert()
     assets[PLATF2] = pygame.image.load(path.join(img_dir, 'foguinho.png')).convert()
     bg = pygame.image.load(path.join(img_dir, 'background AR.jpg')).convert()
     bg2 = pygame.image.load(path.join(img_dir, 'background FOGO.jpg')).convert()
+    bg3 = pygame.image.load(path.join(img_dir, 'fundoagua.png')).convert()
     assets[BACKGROUND] = pygame.transform.scale(bg, (LARGURA, ALTURA))
     assets[BACKGROUND2] = pygame.transform.scale(bg2, (LARGURA, ALTURA))
+    assets[BACKGROUND3] = pygame.transform.scale(bg3, (LARGURA, ALTURA))
     assets["score_font"] = pygame.font.Font('font/PressStart2P.ttf', 28)
     inicial = pygame.image.load(path.join(img_dir, 'inicio.png')).convert()
     assets[INICIAL] = pygame.transform.scale(inicial, (LARGURA, ALTURA))
@@ -279,10 +306,6 @@ pygame.mixer.music.set_volume(0.4)
 
 def game_screen(window):
     # Variável para o ajuste de velocidade
-    inimigo_list = pygame.sprite.Group()
-    pontos_list = pygame.sprite.Group()
-    inimigo2_list = pygame.sprite.Group()
-    pontos2_list = pygame.sprite.Group()
     clock = pygame.time.Clock()
     all_ataque = pygame.sprite.Group()
     assets = load_assets(img_dir)
@@ -295,34 +318,45 @@ def game_screen(window):
     pontos_list = pygame.sprite.Group()
     inimigo2_list = pygame.sprite.Group()
     pontos2_list = pygame.sprite.Group()
+    inimigo3_list = pygame.sprite.Group()
+    pontos3_list = pygame.sprite.Group()
+
 
     player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks, all_ataque, assets[ATAQUE1])
 
     inimigo = []
     inimigo2 = []
+    inimigo3 = []
     inimigo_posicoes_x = [300, 700, 400, 120, 800, 90]
     inimigo_posicoes_y = [420, 300, 100, 180, 28, 30]
     inimigo2_posicoes_x = [300, 700, 800, 400, 800, 250]
     inimigo2_posicoes_y = [420, 300, 180, 180, 420, 60]
+    inimigo3_posicoes_x = [300, 700, 800, 400, 800, 250]
+    inimigo3_posicoes_y = [420, 300, 180, 180, 420, 60]
     i = 0
     while i < len(inimigo_posicoes_x):
         inimigo.append(Enemy(inimigo_posicoes_x[i], inimigo_posicoes_y[i], assets[ENEMY]))
-        inimigo2.append(Enemy(inimigo2_posicoes_x[i], inimigo2_posicoes_y[i], assets[ENEMY2]))
+        inimigo2.append(Enemy(inimigo3_posicoes_x[i], inimigo3_posicoes_y[i], assets[ENEMY2]))
+        inimigo3.append(Enemy(inimigo3_posicoes_x[i], inimigo3_posicoes_y[i], assets[ENEMY3]))
         i += 1
 
     
     #criando os pontos
     points = []
     points2 = []
+    points3 = []
     pontos_posicoes_x = [400,150, 800, 600, 90, 900,150]
     pontos_posicoes_y = [420,300, 300, 100, 180, 20, 30]
     pontos2_posicoes_x = [300,800, 600, 800, 90, 180,500]
     pontos2_posicoes_y = [420,420, 300, 180, 180, 60, 180]
+    pontos3_posicoes_x = [300,800, 600, 800, 90, 180,500]
+    pontos3_posicoes_y = [420,420, 300, 180, 180, 60, 180]
    
     N = 0
     while N < len(pontos_posicoes_x):
         points.append(Point(pontos_posicoes_x[N], pontos_posicoes_y[N], assets[PONTOS1]))
         points2.append(Point(pontos2_posicoes_x[N], pontos2_posicoes_y[N], assets[PONTOS2]))
+        points3.append(Point(pontos3_posicoes_x[N], pontos3_posicoes_y[N], assets[PONTOS3]))
         N += 1
     # Adiciona o jogador e inimigo no grupo de sprites por último para ser desenhado por cima das plataformas
     all_sprites.add(player)
@@ -332,15 +366,18 @@ def game_screen(window):
     while w < len(inimigo):
         inimigo_list.add(inimigo[w])
         inimigo2_list.add(inimigo2[w])
+        inimigo3_list.add(inimigo3[w])
         w += 1
 
     B = 0
     while B < len(points):
         pontos_list.add(points[B])
         pontos2_list.add(points2[B])
+        pontos3_list.add(points3[B])
         B += 1
     Mapa1_criado = False
     Mapa2_criado = False
+    Mapa3_criado = False
     INICIO = 0
     TELA1 = 1
     TELA2 = 2
@@ -473,7 +510,6 @@ def game_screen(window):
 
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
-
         if state == TELA2:
             if Mapa2_criado == False:
                 all_sprites.remove(blocks, platforms)
@@ -540,7 +576,8 @@ def game_screen(window):
                 player.contato = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
-
+                if len(pontos2_list) == 0:
+                    state = TELA3
             # Depois de processar os eventos.
             # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
             all_sprites.update()
@@ -569,6 +606,104 @@ def game_screen(window):
 
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
+
+        if state == TELA3:
+            if Mapa3_criado == False:
+                all_sprites.remove(blocks, platforms)
+                blocks.empty()
+                platforms.empty() 
+                for row in range(len(MAP3)):
+                    for column in range(len(MAP3[row])):
+                        tile_type = MAP3[row][column]
+                        if tile_type != EMPTY:
+                            tile = Tile(assets[tile_type], row, column)
+                            all_sprites.add(tile)
+                            if tile_type == BLOCK3:
+                                blocks.add(tile)
+                            elif tile_type == PLATF3:
+                                platforms.add(tile)
+                Mapa3_criado = True
+
+            clock.tick(FPS)                    
+
+            # Processa os eventos (mouse, teclado, botão, etc).
+            for event in pygame.event.get():
+                # Verifica se foi fechado.
+                if event.type == pygame.QUIT:
+                    state = DONE
+                # Verifica se apertou alguma tecla.
+                if event.type == pygame.KEYDOWN:
+                    # Dependendo da tecla, altera o estado do jogador.
+                    if event.key == pygame.K_LEFT:
+                        player.speedx -= SPEED_X
+                        player.direcao = -1
+                    elif event.key == pygame.K_RIGHT:
+                        player.speedx += SPEED_X
+                        player.direcao = 1
+                    elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
+                        player.jump()
+                    if event.key == ord('q'):
+                        player.shoot()
+                # Verifica se soltou alguma tecla.
+                if event.type == pygame.KEYUP:
+                    # Dependendo da tecla, altera o estado do jogador.
+                    if event.key == pygame.K_LEFT:
+                        player.speedx += SPEED_X
+                    elif event.key == pygame.K_RIGHT:
+                        player.speedx -= SPEED_X
+
+            for e in inimigo3_list:
+                e.move()
+            for ataque in player.all_ataque:
+                sprite = pygame.sprite.spritecollide(ataque, inimigo3_list, True)
+
+            encontro3 = pygame.sprite.spritecollide(player, inimigo3_list, False)
+            if len(encontro3) > 0 and player.contato == False:
+                player.contato = True
+                player.health -= 1
+                player.last_update = pygame.time.get_ticks()
+            if player.health <= 0:
+                state = TELAFINAL
+            
+            for ataque in player.all_ataque:
+                sprite = pygame.sprite.spritecollide(ataque, inimigo3_list, True)
+
+            pegou_fogo = pygame.sprite.spritecollide(player, pontos3_list, True)
+            if len(pegou_fogo) > 0 and player.contato == False:
+                player.contato = True
+                player.pontos += 1
+                player.last_update = pygame.time.get_ticks()
+
+            # Depois de processar os eventos.
+            # Atualiza a acao de cada sprite. O grupo chama o método update() de cada Sprite dentre dele.
+            all_sprites.update()
+            all_ataque.update()
+            
+            # A cada loop, redesenha o fundo e os sprites
+            window.fill((0, 0, 0))
+            window.blit(assets[BACKGROUND3], (0, 0))
+
+            all_sprites.draw(window)
+            all_ataque.draw(window)
+            inimigo3_list.draw(window)
+            pontos3_list.draw(window)
+
+            # Desenhando as vidas
+            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
+            text_rect = text_surface.get_rect()
+            text_rect.bottomleft = (10, ALTURA - 1)
+            window.blit(text_surface, text_rect)
+
+            #Desenhando os pontos
+            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
+            text_rect = text_surface.get_rect()
+            text_rect.midtop = (LARGURA / 2,  10)
+            window.blit(text_surface, text_rect)
+
+            # Depois de desenhar tudo, inverte o display.
+            pygame.display.flip()
+
+
         if state == TELAFINAL:
             font3 = pygame.font.SysFont('Algerian', 100)
             text3 = font3.render("GAME OVER", False, (255, 255, 255))
