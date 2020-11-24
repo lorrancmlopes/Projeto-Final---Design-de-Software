@@ -384,7 +384,7 @@ def game_screen(window):
                     for column in range(len(MAP1[row])):
                         tile_type = MAP1[row][column]
                         if tile_type != EMPTY:
-                            tile = Tile(assets[BLOCK], row, column)
+                            tile = Tile(assets[tile_type], row, column)
                             all_sprites.add(tile)
                             if tile_type == BLOCK:
                                 blocks.add(tile)
@@ -471,12 +471,13 @@ def game_screen(window):
             pygame.display.flip()
 
         if state == TELA2:
-            if Mapa2_criado == False:
+            
+            if Mapa2_criado == False: 
                 for row in range(len(MAP2)):
                     for column in range(len(MAP2[row])):
                         tile_type = MAP2[row][column]
                         if tile_type != EMPTY:
-                            tile = Tile(assets[BLOCK2], row, column)
+                            tile = Tile(assets[tile_type], row, column)
                             all_sprites.add(tile)
                             if tile_type == BLOCK2:
                                 blocks.add(tile)
