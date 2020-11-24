@@ -473,7 +473,10 @@ def game_screen(window):
             pygame.display.flip()
 
         if state == TELA2:
-            if Mapa2_criado == False: 
+            if Mapa2_criado == False:
+                all_sprites.remove(blocks, platforms)
+                blocks.empty()
+                platforms.empty() 
                 for row in range(len(MAP2)):
                     for column in range(len(MAP2[row])):
                         tile_type = MAP2[row][column]
