@@ -12,3 +12,6 @@ As quatro fases se passam uma atrás da outra. Ele tem um total de 3 vidas para 
 https://opensource.com/article/18/7/put-platforms-python-game#:~:text=%20Put%20platforms%20in%20a%20Python%20game%20with,part%20of%20level%20design%20and%20game...%20More%20
 https://docs.python.org/3/
 https://github.com/insper/pygame-snippets
+
+
+LINK DO VÍDEO DEMONSTRANDO O FUNCIONAMENTO DO JOGO: https://youtu.be/w5LsTW0_ZB4
