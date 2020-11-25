@@ -150,7 +150,7 @@ class Tile(pygame.sprite.Sprite):
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, player_img, row, column, platforms, blocks, all_ataque, ataque_img):
+    def __init__(self, player_img, row, column, platforms, blocks, all_ataque, ataque_img, pew_sound):
 
         pygame.sprite.Sprite.__init__(self)
         self.state = STILL
@@ -176,6 +176,7 @@ class Player(pygame.sprite.Sprite):
         self.direcao = 1
         self.row = row
         self.column = column
+        self.pew_sound = pew_sound
     def update(self):
         now = pygame.time.get_ticks()
         elapsed_ticks = now - self.last_update
@@ -235,6 +236,7 @@ class Player(pygame.sprite.Sprite):
         # A nova bala vai ser criada logo acima e no centro horizontal da nave
         new_ataque = Ataque(self.ataque_img, self.rect.centerx, self.rect.bottom, self.direcao)
         self.all_ataque.add(new_ataque)
+        self.pew_sound.play()
         
         # ataques_lista = []
         # ataques_lista.append(new_ataque)
@@ -331,6 +333,10 @@ def load_assets(img_dir):
 # Carrega os sons do jogo
 pygame.mixer.music.load('snd/game_on.mp3')
 pygame.mixer.music.set_volume(0.4)
+pew_sound = pygame.mixer.Sound('snd/pew.wav')
+pegou_sound = pygame.mixer.Sound('snd/pegou.wav')
+encostou1 = pygame.mixer.Sound('snd/enemyy.wav')
+kill1 = pygame.mixer.Sound('snd/kill.wav')
 
 def game_screen(window):
     # Variável para o ajuste de velocidade
@@ -351,7 +357,7 @@ def game_screen(window):
     inimigo4_list = pygame.sprite.Group()
     pontos4_list = pygame.sprite.Group()
 
-    player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks, all_ataque, assets[ATAQUE1])
+    player = Player(assets[PLAYER_IMG], 12, 2, platforms, blocks, all_ataque, assets[ATAQUE1], pew_sound)
 
     inimigo = []
     inimigo2 = []
@@ -527,13 +533,15 @@ def game_screen(window):
                 e.move()
             
             ataque = pygame.sprite.groupcollide(all_ataque, inimigo_list, True, True)
-
+            if len(ataque)>0:
+                kill1.play()
 
             encontro = pygame.sprite.spritecollide(player, inimigo_list, False)
             if len(encontro) > 0 and player.contato == False:
                 player.contato = True
                 player.health -= 1
                 player.last_update = pygame.time.get_ticks()
+                encostou1.play()
             if player.health <= 0:
                 state = TELAFINAL
                 
@@ -542,6 +550,7 @@ def game_screen(window):
                 player.contato_ponto = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
+                pegou_sound.play()
                 if len(pontos_list) == 0:
                     state = TELA2
 
@@ -624,12 +633,15 @@ def game_screen(window):
                 e.move()
 
             ataque = pygame.sprite.groupcollide(all_ataque, inimigo2_list, True, True)
+            if len(ataque)>0:
+                kill1.play()
 
             encontro2 = pygame.sprite.spritecollide(player, inimigo2_list, False)
             if len(encontro2) > 0 and player.contato == False:
                 player.contato = True
                 player.health -= 1
                 player.last_update = pygame.time.get_ticks()
+                encostou1.play()
             if player.health <= 0:
                 state = TELAFINAL
 
@@ -638,6 +650,7 @@ def game_screen(window):
                 player.contato_ponto = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
+                pegou_sound.play()
                 if len(pontos2_list) == 0:
                     state = TELA3
             # Depois de processar os eventos.
@@ -719,12 +732,15 @@ def game_screen(window):
             for e in inimigo3_list:
                 e.move()
             ataque = pygame.sprite.groupcollide(all_ataque, inimigo3_list, True, True)
+            if len(ataque)>0:
+                kill1.play()
 
             encontro3 = pygame.sprite.spritecollide(player, inimigo3_list, False)
             if len(encontro3) > 0 and player.contato == False:
                 player.contato = True
                 player.health -= 1
                 player.last_update = pygame.time.get_ticks()
+                encostou1.play()
             if player.health <= 0:
                 state = TELAFINAL
 
@@ -733,6 +749,7 @@ def game_screen(window):
                 player.contato_ponto = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
+                pegou_sound.play()
                 if len(pontos3_list) == 0:
                     state = TELA4
             # Depois de processar os eventos.
@@ -816,12 +833,15 @@ def game_screen(window):
                 e.move()
 
             ataque = pygame.sprite.groupcollide(all_ataque, inimigo4_list, True, True)
+            if len(ataque)>0:
+                kill1.play()
 
             encontro4 = pygame.sprite.spritecollide(player, inimigo4_list, False)
             if len(encontro4) > 0 and player.contato == False:
                 player.contato = True
                 player.health -= 1
                 player.last_update = pygame.time.get_ticks()
+                encostou1.play()
             if player.health <= 0:
                 state = TELAFINAL
 
@@ -830,6 +850,7 @@ def game_screen(window):
                 player.contato_ponto = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
+                pegou_sound.play()
                 if len(pontos4_list) == 0:
                     state = TELAGANHADOR
             # Depois de processar os eventos.
