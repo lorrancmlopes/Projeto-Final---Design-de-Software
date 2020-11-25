@@ -148,7 +148,7 @@ class Tile(pygame.sprite.Sprite):
         self.rect.x = TILE_SIZE * column
         self.rect.y = TILE_SIZE * row
 
-class Player(pygame.sprite.Sprite):
+class Player(pygame.sprite.Sprite): #classe do jogador, Aang
 
     def __init__(self, player_img, row, column, platforms, blocks, all_ataque, ataque_img, pew_sound):
 
@@ -176,7 +176,7 @@ class Player(pygame.sprite.Sprite):
         self.direcao = 1
         self.row = row
         self.column = column
-        self.pew_sound = pew_sound
+        self.pew_sound = pew_sound #som de tiro
     def update(self):
         now = pygame.time.get_ticks()
         elapsed_ticks = now - self.last_update
@@ -233,7 +233,6 @@ class Player(pygame.sprite.Sprite):
             self.speedy -= JUMP_SIZE
             self.state = JUMPING
     def shoot(self):
-        # A nova bala vai ser criada logo acima e no centro horizontal da nave
         new_ataque = Ataque(self.ataque_img, self.rect.centerx, self.rect.bottom, self.direcao)
         self.all_ataque.add(new_ataque)
         self.pew_sound.play()
@@ -428,7 +427,7 @@ def game_screen(window):
         pontos4_list.add(points4[B])
         B += 1
 
-    Mapa1_criado = False
+    Mapa1_criado = False #Variáveis auxiliares
     Mapa2_criado = False
     Mapa3_criado = False
     Mapa4_criado = False
@@ -444,9 +443,6 @@ def game_screen(window):
     DONE = 8
     RESTART = 9
     state = INICIO
-    
-    # font = pygame.font.SysFont(None, 48)
-    # text = font.render("Lord's Element", True, (0, 0, 255))
     
     pygame.mixer.music.play(loops=-1)
     
@@ -891,9 +887,7 @@ def game_screen(window):
                     # Dependendo da tecla, altera o estado do jogador.
                     if event.key == pygame.K_ESCAPE:
                         state = DONE
-                    if event.key == ord('r'): #reseta, mas não volta os pontos para pegar ('ar')
-                        #state = TELA1
-                        #player.health = 3
+                    if event.key == ord('r'): #
                         window.fill((255, 255, 255))
                         return INICIO
 
@@ -912,9 +906,7 @@ def game_screen(window):
                     state = DONE
                 if event.type == pygame.KEYUP:
                     # Dependendo da tecla, altera o estado do jogador.
-                    if event.key == ord('r'): #reseta, mas não volta os pontos para pegar ('ar')
-                        #state = TELA1
-                        #player.health = 3
+                    if event.key == ord('r'): 
                         window.fill((255, 255, 255))
                         return INICIO
                         
@@ -922,11 +914,6 @@ def game_screen(window):
             window.blit(assets[GAMEOVER], (0, 0))
             window.blit(text3, ((LARGURA/2 - 300), (ALTURA/2 - 50)))
             pygame.display.flip()
-# Comando para evitar travamentos.
-# try:
-#     game_screen(window)
-# finally:
-#     pygame.quit()
 INICIO = 0
 TELAINSTRUCOES = 1
 TELA1 = 2
