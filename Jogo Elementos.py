@@ -26,6 +26,8 @@ window = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Lord's Element")
 
 PLAYER_IMG = 'player_img'
+BGINSTRUCOES = 'telainstrucoes'
+BGGANHADOR = 'telaganhador'
 BACKGROUND = 'background_air'
 BACKGROUND2 = 'background_fire'
 BACKGROUND3 = 'fundoagua'
@@ -64,8 +66,8 @@ MAP1 = [
     [BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK],
     [BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK, BLOCK],
 ]
-BLOCK2 = 7
-PLATF2 = 8
+BLOCK2 = 21
+PLATF2 = 22
 EMPTY = -1
 
 MAP2 = [
@@ -92,7 +94,7 @@ MAP3 = [
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, EMPTY, EMPTY],
+    [BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, EMPTY, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY],
@@ -115,14 +117,14 @@ MAP4 = [
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK4,BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK4, BLOCK4, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY, EMPTY, BLOCK4, BLOCK4, BLOCK4, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
+    [BLOCK4, BLOCK4, BLOCK4, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK3, BLOCK4, BLOCK4],    
-    [BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK3, BLOCK4, BLOCK4],
+    [BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4],    
+    [BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4, BLOCK4],
 ]
 STILL = 0
 JUMPING = 1
@@ -309,10 +311,14 @@ def load_assets(img_dir):
     bg2 = pygame.image.load(path.join(img_dir, 'background FOGO.jpg')).convert()
     bg3 = pygame.image.load(path.join(img_dir, 'fundoagua.png')).convert()
     bg4 = pygame.image.load(path.join(img_dir, 'background4.jpg')).convert()
+    bginstrucoes = pygame.image.load(path.join(img_dir, 'telainstrucoes.png')).convert()
+    bgganhou = pygame.image.load(path.join(img_dir, 'telaganhador.png')).convert()
     assets[BACKGROUND] = pygame.transform.scale(bg, (LARGURA, ALTURA))
     assets[BACKGROUND2] = pygame.transform.scale(bg2, (LARGURA, ALTURA))
     assets[BACKGROUND3] = pygame.transform.scale(bg3, (LARGURA, ALTURA))
     assets[BACKGROUND4] = pygame.transform.scale(bg4, (LARGURA, ALTURA))
+    assets[BGINSTRUCOES] = pygame.transform.scale(bginstrucoes, (LARGURA, ALTURA))
+    assets[BGGANHADOR] = pygame.transform.scale(bgganhou, (LARGURA, ALTURA))
     assets["score_font"] = pygame.font.Font('font/PressStart2P.ttf', 28)
     inicial = pygame.image.load(path.join(img_dir, 'inicio.png')).convert()
     assets[INICIAL] = pygame.transform.scale(inicial, (LARGURA, ALTURA))
@@ -351,11 +357,14 @@ def game_screen(window):
     inimigo4 = []
     inimigo_posicoes_x = [300, 700, 400, 120, 800, 90]
     inimigo_posicoes_y = [420, 300, 100, 180, 28, 30]
+
     inimigo2_posicoes_x = [300, 700, 800, 400, 800, 250]
     inimigo2_posicoes_y = [420, 300, 180, 180, 420, 60]
-    inimigo3_posicoes_x = [300, 700, 800, 400, 800, 250]
-    inimigo3_posicoes_y = [420, 300, 180, 180, 420, 60]
-    inimigo4_posicoes_x = [300, 700, 800, 400, 800, 250]
+
+    inimigo3_posicoes_x = [300, 800, 600, 160, 800, 250]
+    inimigo3_posicoes_y = [420, 300, 60, 180, 420, 60]
+    
+    inimigo4_posicoes_x = [400, 800, 700, 200, 800, 350]
     inimigo4_posicoes_y = [420, 300, 180, 180, 420, 60]
     i = 0
     while i < len(inimigo_posicoes_x):
@@ -371,14 +380,19 @@ def game_screen(window):
     points2 = []
     points3 = []
     points4 = []
-    pontos_posicoes_x = [400,150, 800, 600, 90, 900,150]
-    pontos_posicoes_y = [420,300, 300, 100, 180, 20, 30]
-    pontos2_posicoes_x = [300,800, 600, 800, 90, 180,500]
-    pontos2_posicoes_y = [420,420, 300, 180, 180, 60, 180]
-    pontos3_posicoes_x = [300,800, 600, 800, 90, 180,500]
-    pontos3_posicoes_y = [420,420, 300, 180, 180, 60, 180]
-    pontos4_posicoes_x = [300,800, 600, 800, 90, 180,500]
-    pontos4_posicoes_y = [420,420, 300, 180, 180, 60, 180]
+
+    pontos_posicoes_x = [400, 150, 800, 600, 90, 900, 150]
+    pontos_posicoes_y = [420, 300, 300, 100, 180, 20, 30]
+
+    pontos2_posicoes_x = [300, 800, 600, 800, 100, 180, 500]
+    pontos2_posicoes_y = [420, 420, 300, 180, 180, 60, 180]
+
+    pontos3_posicoes_x = [300, 800, 50, 900, 90, 150, 500]
+    pontos3_posicoes_y = [420, 420, 300, 300, 180, 60, 180]
+
+    pontos4_posicoes_x = [50, 300, 100, 750, 500, 900, 300]
+    pontos4_posicoes_y = [250, 420, 40, 60, 180, 300, 60]
+
     N = 0
     while N < len(pontos_posicoes_x):
         points.append(Point(pontos_posicoes_x[N], pontos_posicoes_y[N], assets[PONTOS1]))
@@ -412,13 +426,15 @@ def game_screen(window):
     Mapa4_criado = False
     
     INICIO = 0
-    TELA1 = 1
-    TELA2 = 2
-    TELA3 = 3
-    TELA4 = 4
-    TELAFINAL = 5  
-    DONE = 6
-    RESTART = 7
+    TELAINSTRUCOES = 1
+    TELA1 = 2
+    TELA2 = 3
+    TELA3 = 4
+    TELA4 = 5
+    TELAFINAL = 6
+    TELAGANHADOR = 7  
+    DONE = 8
+    RESTART = 9
     state = INICIO
     
     # font = pygame.font.SysFont(None, 48)
@@ -441,7 +457,7 @@ def game_screen(window):
                     state = DONE
 
                 if event.type == pygame.KEYUP:
-                    state = TELA1
+                    state = TELAINSTRUCOES
 
             # A cada loop, redesenha o fundo e os sprites
             window.fill((255, 255, 255))
@@ -450,6 +466,19 @@ def game_screen(window):
             window.blit(text2, ((LARGURA/2 - 300), (10)))
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
+        if state == TELAINSTRUCOES:
+            for event in pygame.event.get():
+            
+                if event.type == pygame.QUIT:
+                    state = DONE
+
+                if event.type == pygame.KEYUP:
+                    state = TELA1
+
+            window.fill((255, 255, 255))
+            window.blit(assets[BGINSTRUCOES], (0, 0))
+            pygame.display.flip()
+
         if state == TELA1:
             # Ajusta a velocidade do jogo.
         
@@ -497,7 +526,6 @@ def game_screen(window):
             
             for ataque in player.all_ataque:
                 sprite = pygame.sprite.spritecollide(ataque, inimigo_list, True)
-                
 
             encontro = pygame.sprite.spritecollide(player, inimigo_list, False)
             if len(encontro) > 0 and player.contato == False:
@@ -834,6 +862,20 @@ def game_screen(window):
             # Depois de desenhar tudo, inverte o display.
             pygame.display.flip()
 
+        if state == TELAGANHADOR:
+            for event in pygame.event.get():
+                # Verifica se foi fechado.
+                if event.type == pygame.QUIT:
+                    state = DONE
+                if event.type == pygame.KEYUP:
+                    # Dependendo da tecla, altera o estado do jogador.
+                    if event.key == pygame.K_ESCAPE:
+                        state = DONE
+                    if event.key == ord('r'): #reseta, mas não volta os pontos para pegar ('ar')
+                        #state = TELA1
+                        #player.health = 3
+                        window.fill((255, 255, 255))
+                        return INICIO
 
         if state == TELAFINAL:
             font3 = pygame.font.SysFont('Algerian', 100)
@@ -861,13 +903,15 @@ def game_screen(window):
 # finally:
 #     pygame.quit()
 INICIO = 0
-TELA1 = 1
-TELA2 = 2
-TELA3 = 3
-TELA4 = 4
-TELAFINAL = 5  
-DONE = 6
-RESTART = 7
+TELAINSTRUCOES = 1
+TELA1 = 2
+TELA2 = 3
+TELA3 = 4
+TELA4 = 5
+TELAFINAL = 6
+TELAGANHADOR = 7  
+DONE = 8
+RESTART = 9
 state = INICIO
 while state != DONE:
     if state == INICIO:
