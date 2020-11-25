@@ -94,7 +94,7 @@ MAP3 = [
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
-    [BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, EMPTY, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, EMPTY, EMPTY],
+    [BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY, EMPTY, EMPTY, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, BLOCK3, EMPTY, EMPTY],
@@ -174,6 +174,8 @@ class Player(pygame.sprite.Sprite):
         self.contato_ponto = False
         self.last_update_ponto = pygame.time.get_ticks()
         self.direcao = 1
+        self.row = row
+        self.column = column
     def update(self):
         now = pygame.time.get_ticks()
         elapsed_ticks = now - self.last_update
@@ -524,8 +526,8 @@ def game_screen(window):
             for e in inimigo_list:
                 e.move()
             
-            for ataque in player.all_ataque:
-                sprite = pygame.sprite.spritecollide(ataque, inimigo_list, True)
+            ataque = pygame.sprite.groupcollide(all_ataque, inimigo_list, True, True)
+
 
             encontro = pygame.sprite.spritecollide(player, inimigo_list, False)
             if len(encontro) > 0 and player.contato == False:
@@ -536,8 +538,8 @@ def game_screen(window):
                 state = TELAFINAL
                 
             pegou_ponto = pygame.sprite.spritecollide(player, pontos_list, True)
-            if len(pegou_ponto) > 0 and player.contato == False:
-                player.contato = True
+            if len(pegou_ponto) > 0 and player.contato_ponto == False:
+                player.contato_ponto = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
                 if len(pontos_list) == 0:
@@ -573,6 +575,8 @@ def game_screen(window):
             pygame.display.flip()
         if state == TELA2:
             if Mapa2_criado == False:
+                player.rect.x = player.column * TILE_SIZE
+                player.rect.bottom = player.row * TILE_SIZE
                 all_sprites.remove(blocks, platforms)
                 blocks.empty()
                 platforms.empty() 
@@ -618,8 +622,8 @@ def game_screen(window):
 
             for e in inimigo2_list:
                 e.move()
-            for ataque in player.all_ataque:
-                sprite = pygame.sprite.spritecollide(ataque, inimigo2_list, True)
+
+            ataque = pygame.sprite.groupcollide(all_ataque, inimigo2_list, True, True)
 
             encontro2 = pygame.sprite.spritecollide(player, inimigo2_list, False)
             if len(encontro2) > 0 and player.contato == False:
@@ -628,13 +632,10 @@ def game_screen(window):
                 player.last_update = pygame.time.get_ticks()
             if player.health <= 0:
                 state = TELAFINAL
-            
-            for ataque in player.all_ataque:
-                sprite = pygame.sprite.spritecollide(ataque, inimigo2_list, True)
 
             pegou_fogo = pygame.sprite.spritecollide(player, pontos2_list, True)
-            if len(pegou_fogo) > 0 and player.contato == False:
-                player.contato = True
+            if len(pegou_fogo) > 0 and player.contato_ponto == False:
+                player.contato_ponto = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
                 if len(pontos2_list) == 0:
@@ -670,6 +671,8 @@ def game_screen(window):
 
         if state == TELA3:
             if Mapa3_criado == False:
+                player.rect.x = player.column * TILE_SIZE
+                player.rect.bottom = player.row * TILE_SIZE
                 all_sprites.remove(blocks, platforms)
                 blocks.empty()
                 platforms.empty() 
@@ -715,8 +718,7 @@ def game_screen(window):
 
             for e in inimigo3_list:
                 e.move()
-            for ataque in player.all_ataque:
-                sprite = pygame.sprite.spritecollide(ataque, inimigo3_list, True)
+            ataque = pygame.sprite.groupcollide(all_ataque, inimigo3_list, True, True)
 
             encontro3 = pygame.sprite.spritecollide(player, inimigo3_list, False)
             if len(encontro3) > 0 and player.contato == False:
@@ -725,13 +727,10 @@ def game_screen(window):
                 player.last_update = pygame.time.get_ticks()
             if player.health <= 0:
                 state = TELAFINAL
-            
-            for ataque in player.all_ataque:
-                sprite = pygame.sprite.spritecollide(ataque, inimigo3_list, True)
 
             pegou_agua = pygame.sprite.spritecollide(player, pontos3_list, True)
-            if len(pegou_agua) > 0 and player.contato == False:
-                player.contato = True
+            if len(pegou_agua) > 0 and player.contato_ponto == False:
+                player.contato_ponto = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
                 if len(pontos3_list) == 0:
@@ -766,7 +765,10 @@ def game_screen(window):
             pygame.display.flip()
 
         if state == TELA4:
+
             if Mapa4_criado == False:
+                player.rect.x = player.column * TILE_SIZE
+                player.rect.bottom = player.row * TILE_SIZE
                 all_sprites.remove(blocks, platforms)
                 blocks.empty()
                 platforms.empty() 
@@ -812,8 +814,8 @@ def game_screen(window):
 
             for e in inimigo4_list:
                 e.move()
-            for ataque in player.all_ataque:
-                sprite = pygame.sprite.spritecollide(ataque, inimigo4_list, True)
+
+            ataque = pygame.sprite.groupcollide(all_ataque, inimigo4_list, True, True)
 
             encontro4 = pygame.sprite.spritecollide(player, inimigo4_list, False)
             if len(encontro4) > 0 and player.contato == False:
@@ -822,13 +824,10 @@ def game_screen(window):
                 player.last_update = pygame.time.get_ticks()
             if player.health <= 0:
                 state = TELAFINAL
-            
-            for ataque in player.all_ataque:
-                sprite = pygame.sprite.spritecollide(ataque, inimigo4_list, True)
 
             pegou_terra = pygame.sprite.spritecollide(player, pontos4_list, True)
-            if len(pegou_terra) > 0 and player.contato == False:
-                player.contato = True
+            if len(pegou_terra) > 0 and player.contato_ponto == False:
+                player.contato_ponto = True
                 player.pontos += 1
                 player.last_update = pygame.time.get_ticks()
                 if len(pontos4_list) == 0:
@@ -876,6 +875,11 @@ def game_screen(window):
                         #player.health = 3
                         window.fill((255, 255, 255))
                         return INICIO
+
+            window.fill((255, 255, 255))
+            window.blit(assets[BGGANHADOR], (0, 0))
+            pygame.display.flip()
+
 
         if state == TELAFINAL:
             font3 = pygame.font.SysFont('Algerian', 100)
