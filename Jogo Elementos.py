@@ -341,6 +341,38 @@ pegou_sound = pygame.mixer.Sound('snd/pegou.wav')
 encostou1 = pygame.mixer.Sound('snd/enemyy.wav')
 kill1 = pygame.mixer.Sound('snd/kill.wav')
 
+def DesenhaVidaEPontos(player, assets):
+    # Desenhando as vidas
+    textSurface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
+    textRect = textSurface.get_rect()
+    textRect.bottomleft = (10, ALTURA - 1)
+    window.blit(textSurface, textRect)
+
+    #Desenhando os pontos
+    textSurface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
+    textRect = textSurface.get_rect()
+    textRect.midtop = (LARGURA / 2,  10)
+    window.blit(textSurface, textRect)
+
+    # Depois de desenhar tudo, inverte o display.
+    pygame.display.flip()
+
+def desenhaMapa(player, allSprites, assets, blocks,platforms,mapa,bloco,plaft):
+    player.rect.bottom = player.row * TILE_SIZE
+    allSprites.remove(blocks, platforms)
+    blocks.empty()
+    platforms.empty() 
+    for row in range(len(mapa)):
+        for column in range(len(mapa[row])):
+            tileType = mapa[row][column]
+            if tileType != EMPTY:
+                tile = Tile(assets[tileType], row, column)
+                allSprites.add(tile)
+                if tileType == bloco:
+                    blocks.add(tile)
+                elif tileType == plaft:
+                    platforms.add(tile)
+
 def game_screen(window):
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
@@ -450,6 +482,7 @@ def game_screen(window):
     
     pygame.mixer.music.play(loops=-1)
     
+   
     while state != DONE:
         # Ajusta a velocidade do jogo.
         clock.tick(FPS)
@@ -489,18 +522,8 @@ def game_screen(window):
 
         if state == TELA1:
             # Ajusta a velocidade do jogo.
-        
             if Mapa1_criado == False:
-                for row in range(len(MAP1)):
-                    for column in range(len(MAP1[row])):
-                        tile_type = MAP1[row][column]
-                        if tile_type != EMPTY:
-                            tile = Tile(assets[tile_type], row, column)
-                            all_sprites.add(tile)
-                            if tile_type == BLOCK:
-                                blocks.add(tile)
-                            elif tile_type == PLATF:
-                                platforms.add(tile)
+                desenhaMapa(player, all_sprites, assets, blocks,platforms,MAP1,BLOCK,PLATF)
                 Mapa1_criado = True                
             clock.tick(FPS)
             # Processa os eventos (mouse, teclado, botão, etc).
@@ -568,39 +591,12 @@ def game_screen(window):
             inimigo_list.draw(window)
             pontos_list.draw(window)
 
-            # Desenhando as vidas
-            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.bottomleft = (10, ALTURA - 1)
-            window.blit(text_surface, text_rect)
-
-            #Desenhando os pontos
-            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (LARGURA / 2,  10)
-            window.blit(text_surface, text_rect)
-
-            # Depois de desenhar tudo, inverte o display.
-            pygame.display.flip()
+            DesenhaVidaEPontos(player, assets)
+            
         if state == TELA2:
             if Mapa2_criado == False:
-                player.rect.x = player.column * TILE_SIZE
-                player.rect.bottom = player.row * TILE_SIZE
-                all_sprites.remove(blocks, platforms)
-                blocks.empty()
-                platforms.empty() 
-                for row in range(len(MAP2)):
-                    for column in range(len(MAP2[row])):
-                        tile_type = MAP2[row][column]
-                        if tile_type != EMPTY:
-                            tile = Tile(assets[tile_type], row, column)
-                            all_sprites.add(tile)
-                            if tile_type == BLOCK2:
-                                blocks.add(tile)
-                            elif tile_type == PLATF2:
-                                platforms.add(tile)
+                desenhaMapa(player, all_sprites, assets, blocks,platforms,MAP2,BLOCK2,PLATF2)
                 Mapa2_criado = True
-
             clock.tick(FPS)                    
 
             # Processa os eventos (mouse, teclado, botão, etc).
@@ -628,7 +624,7 @@ def game_screen(window):
                         player.speedx += SPEED_X
                     elif event.key == pygame.K_RIGHT:
                         player.speedx -= SPEED_X
-
+            
             for e in inimigo2_list:
                 e.move()
 
@@ -667,40 +663,12 @@ def game_screen(window):
             inimigo2_list.draw(window)
             pontos2_list.draw(window)
 
-            # Desenhando as vidas
-            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.bottomleft = (10, ALTURA - 1)
-            window.blit(text_surface, text_rect)
-
-            #Desenhando os pontos
-            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (LARGURA / 2,  10)
-            window.blit(text_surface, text_rect)
-
-            # Depois de desenhar tudo, inverte o display.
-            pygame.display.flip()
+            DesenhaVidaEPontos(player, assets)
 
         if state == TELA3:
             if Mapa3_criado == False:
-                player.rect.x = player.column * TILE_SIZE
-                player.rect.bottom = player.row * TILE_SIZE
-                all_sprites.remove(blocks, platforms)
-                blocks.empty()
-                platforms.empty() 
-                for row in range(len(MAP3)):
-                    for column in range(len(MAP3[row])):
-                        tile_type = MAP3[row][column]
-                        if tile_type != EMPTY:
-                            tile = Tile(assets[tile_type], row, column)
-                            all_sprites.add(tile)
-                            if tile_type == BLOCK3:
-                                blocks.add(tile)
-                            elif tile_type == PLATF3:
-                                platforms.add(tile)
+                desenhaMapa(player, all_sprites, assets, blocks,platforms,MAP3,BLOCK3,PLATF3)
                 Mapa3_criado = True
-
             clock.tick(FPS)                    
 
             # Processa os eventos (mouse, teclado, botão, etc).
@@ -766,39 +734,12 @@ def game_screen(window):
             inimigo3_list.draw(window)
             pontos3_list.draw(window)
 
-            # Desenhando as vidas
-            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.bottomleft = (10, ALTURA - 1)
-            window.blit(text_surface, text_rect)
-
-            #Desenhando os pontos
-            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (LARGURA / 2,  10)
-            window.blit(text_surface, text_rect)
-
-            # Depois de desenhar tudo, inverte o display.
-            pygame.display.flip()
+            DesenhaVidaEPontos(player, assets)
 
         if state == TELA4:
 
             if Mapa4_criado == False:
-                player.rect.x = player.column * TILE_SIZE
-                player.rect.bottom = player.row * TILE_SIZE
-                all_sprites.remove(blocks, platforms)
-                blocks.empty()
-                platforms.empty() 
-                for row in range(len(MAP4)):
-                    for column in range(len(MAP4[row])):
-                        tile_type = MAP4[row][column]
-                        if tile_type != EMPTY:
-                            tile = Tile(assets[tile_type], row, column)
-                            all_sprites.add(tile)
-                            if tile_type == BLOCK4:
-                                blocks.add(tile)
-                            elif tile_type == PLATF4:
-                                platforms.add(tile)
+                desenhaMapa(player, all_sprites, assets, blocks,platforms,MAP4,BLOCK4,PLATF4)
                 Mapa4_criado = True
 
             clock.tick(FPS)                    
@@ -867,20 +808,7 @@ def game_screen(window):
             inimigo4_list.draw(window)
             pontos4_list.draw(window)
 
-            # Desenhando as vidas
-            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.bottomleft = (10, ALTURA - 1)
-            window.blit(text_surface, text_rect)
-
-            #Desenhando os pontos
-            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (LARGURA / 2,  10)
-            window.blit(text_surface, text_rect)
-
-            # Depois de desenhar tudo, inverte o display.
-            pygame.display.flip()
+            DesenhaVidaEPontos(player, assets)
 
         if state == TELAGANHADOR:
             for event in pygame.event.get():
