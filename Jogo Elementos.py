@@ -341,6 +341,22 @@ pegou_sound = pygame.mixer.Sound('snd/pegou.wav')
 encostou1 = pygame.mixer.Sound('snd/enemyy.wav')
 kill1 = pygame.mixer.Sound('snd/kill.wav')
 
+def DesenhaVidaEPontos(player, assets):
+    # Desenhando as vidas
+    textSurface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
+    textRect = textSurface.get_rect()
+    textRect.bottomleft = (10, ALTURA - 1)
+    window.blit(textSurface, textRect)
+
+    #Desenhando os pontos
+    textSurface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
+    textRect = textSurface.get_rect()
+    textRect.midtop = (LARGURA / 2,  10)
+    window.blit(textSurface, textRect)
+
+    # Depois de desenhar tudo, inverte o display.
+    pygame.display.flip()
+                
 def game_screen(window):
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
@@ -450,6 +466,7 @@ def game_screen(window):
     
     pygame.mixer.music.play(loops=-1)
     
+   
     while state != DONE:
         # Ajusta a velocidade do jogo.
         clock.tick(FPS)
@@ -568,20 +585,8 @@ def game_screen(window):
             inimigo_list.draw(window)
             pontos_list.draw(window)
 
-            # Desenhando as vidas
-            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.bottomleft = (10, ALTURA - 1)
-            window.blit(text_surface, text_rect)
-
-            #Desenhando os pontos
-            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (LARGURA / 2,  10)
-            window.blit(text_surface, text_rect)
-
-            # Depois de desenhar tudo, inverte o display.
-            pygame.display.flip()
+            DesenhaVidaEPontos(player, assets)
+            
         if state == TELA2:
             if Mapa2_criado == False:
                 player.rect.x = player.column * TILE_SIZE
@@ -628,7 +633,7 @@ def game_screen(window):
                         player.speedx += SPEED_X
                     elif event.key == pygame.K_RIGHT:
                         player.speedx -= SPEED_X
-
+            
             for e in inimigo2_list:
                 e.move()
 
@@ -667,20 +672,7 @@ def game_screen(window):
             inimigo2_list.draw(window)
             pontos2_list.draw(window)
 
-            # Desenhando as vidas
-            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.bottomleft = (10, ALTURA - 1)
-            window.blit(text_surface, text_rect)
-
-            #Desenhando os pontos
-            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (LARGURA / 2,  10)
-            window.blit(text_surface, text_rect)
-
-            # Depois de desenhar tudo, inverte o display.
-            pygame.display.flip()
+            DesenhaVidaEPontos(player, assets)
 
         if state == TELA3:
             if Mapa3_criado == False:
@@ -766,20 +758,7 @@ def game_screen(window):
             inimigo3_list.draw(window)
             pontos3_list.draw(window)
 
-            # Desenhando as vidas
-            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.bottomleft = (10, ALTURA - 1)
-            window.blit(text_surface, text_rect)
-
-            #Desenhando os pontos
-            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (LARGURA / 2,  10)
-            window.blit(text_surface, text_rect)
-
-            # Depois de desenhar tudo, inverte o display.
-            pygame.display.flip()
+            DesenhaVidaEPontos(player, assets)
 
         if state == TELA4:
 
@@ -867,20 +846,7 @@ def game_screen(window):
             inimigo4_list.draw(window)
             pontos4_list.draw(window)
 
-            # Desenhando as vidas
-            text_surface = assets['score_font'].render(chr(9829) * player.health, True, (255, 0, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.bottomleft = (10, ALTURA - 1)
-            window.blit(text_surface, text_rect)
-
-            #Desenhando os pontos
-            text_surface = assets['score_font'].render("{:08d}".format(player.pontos), True, (255, 255, 0))
-            text_rect = text_surface.get_rect()
-            text_rect.midtop = (LARGURA / 2,  10)
-            window.blit(text_surface, text_rect)
-
-            # Depois de desenhar tudo, inverte o display.
-            pygame.display.flip()
+            DesenhaVidaEPontos(player, assets)
 
         if state == TELAGANHADOR:
             for event in pygame.event.get():
